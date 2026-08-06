@@ -1,0 +1,14 @@
+{
+  "mediaBaseUrl": "https://cdn.pooring-bele.app/v1/",
+  "levels": [
+    {
+      "id": "lvl_1",
+      "title": "Niveau 1",
+      "categories": [
+        { "id": "lettres",  "title": "Les lettres", "color": "#F4A62A", "pack": "categories/lettres.json" },
+        { "id": "chiffres", "title": "Les chiffres", "color": "#3C6FB3", "pack": "categories/chiffres.json" },
+        { "id": "couleurs", "title": "Les couleurs", "color": "#8E24AA", "pack": "categories/couleurs.json" }
+      ]
+    }
+  ]
+}
