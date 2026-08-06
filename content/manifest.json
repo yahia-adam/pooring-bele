@@ -7,7 +7,10 @@
       "categories": [
         { "id": "lettres",  "title": "Les lettres", "color": "#F4A62A", "pack": "categories/lettres.json" },
         { "id": "chiffres", "title": "Les chiffres", "color": "#3C6FB3", "pack": "categories/chiffres.json" },
-        { "id": "couleurs", "title": "Les couleurs", "color": "#8E24AA", "pack": "categories/couleurs.json" }
+        { "id": "couleurs", "title": "Les couleurs", "color": "#8E24AA", "pack": "categories/couleurs.json" },
+        { "id": "jours",    "title": "Les jours de la semaine", "color": "#00897B", "pack": "categories/jours.json" },
+        { "id": "mois",     "title": "Les mois", "color": "#C0392B", "pack": "categories/mois.json" },
+        { "id": "famille",  "title": "La famille", "color": "#F4511E", "pack": "categories/famille.json" }
       ]
     }
   ]
