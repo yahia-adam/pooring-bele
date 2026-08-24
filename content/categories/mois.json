@@ -1,17 +1,17 @@
 {
   "category": "mois",
   "items": [
-    { "id": "janvier",   "fr": "janvier",   "ecrit": "", "image": "images/mois/janvier.webp",   "audio": "audio/mois/janvier.m4a" },
-    { "id": "fevrier",   "fr": "février",   "ecrit": "", "image": "images/mois/fevrier.webp",   "audio": "audio/mois/fevrier.m4a" },
-    { "id": "mars",      "fr": "mars",      "ecrit": "", "image": "images/mois/mars.webp",      "audio": "audio/mois/mars.m4a" },
-    { "id": "avril",     "fr": "avril",     "ecrit": "", "image": "images/mois/avril.webp",     "audio": "audio/mois/avril.m4a" },
-    { "id": "mai",       "fr": "mai",       "ecrit": "", "image": "images/mois/mai.webp",       "audio": "audio/mois/mai.m4a" },
-    { "id": "juin",      "fr": "juin",      "ecrit": "", "image": "images/mois/juin.webp",      "audio": "audio/mois/juin.m4a" },
-    { "id": "juillet",   "fr": "juillet",   "ecrit": "", "image": "images/mois/juillet.webp",   "audio": "audio/mois/juillet.m4a" },
-    { "id": "aout",      "fr": "août",      "ecrit": "", "image": "images/mois/aout.webp",      "audio": "audio/mois/aout.m4a" },
-    { "id": "septembre", "fr": "septembre", "ecrit": "", "image": "images/mois/septembre.webp", "audio": "audio/mois/septembre.m4a" },
-    { "id": "octobre",   "fr": "octobre",   "ecrit": "", "image": "images/mois/octobre.webp",   "audio": "audio/mois/octobre.m4a" },
-    { "id": "novembre",  "fr": "novembre",  "ecrit": "", "image": "images/mois/novembre.webp",  "audio": "audio/mois/novembre.m4a" },
-    { "id": "decembre",  "fr": "décembre",  "ecrit": "", "image": "images/mois/decembre.webp",  "audio": "audio/mois/decembre.m4a" }
+    { "id": "janvier",   "fr": "janvier",   "short": "JAN", "ecrit": "", "image": "images/mois/janvier.webp",   "audio": "audio/mois/janvier.m4a" },
+    { "id": "fevrier",   "fr": "février",   "short": "FÉV", "ecrit": "", "image": "images/mois/fevrier.webp",   "audio": "audio/mois/fevrier.m4a" },
+    { "id": "mars",      "fr": "mars",      "short": "MAR", "ecrit": "", "image": "images/mois/mars.webp",      "audio": "audio/mois/mars.m4a" },
+    { "id": "avril",     "fr": "avril",     "short": "AVR", "ecrit": "", "image": "images/mois/avril.webp",     "audio": "audio/mois/avril.m4a" },
+    { "id": "mai",       "fr": "mai",       "short": "MAI", "ecrit": "", "image": "images/mois/mai.webp",       "audio": "audio/mois/mai.m4a" },
+    { "id": "juin",      "fr": "juin",      "short": "JUN", "ecrit": "", "image": "images/mois/juin.webp",      "audio": "audio/mois/juin.m4a" },
+    { "id": "juillet",   "fr": "juillet",   "short": "JUL", "ecrit": "", "image": "images/mois/juillet.webp",   "audio": "audio/mois/juillet.m4a" },
+    { "id": "aout",      "fr": "août",      "short": "AOÛ", "ecrit": "", "image": "images/mois/aout.webp",      "audio": "audio/mois/aout.m4a" },
+    { "id": "septembre", "fr": "septembre", "short": "SEP", "ecrit": "", "image": "images/mois/septembre.webp", "audio": "audio/mois/septembre.m4a" },
+    { "id": "octobre",   "fr": "octobre",   "short": "OCT", "ecrit": "", "image": "images/mois/octobre.webp",   "audio": "audio/mois/octobre.m4a" },
+    { "id": "novembre",  "fr": "novembre",  "short": "NOV", "ecrit": "", "image": "images/mois/novembre.webp",  "audio": "audio/mois/novembre.m4a" },
+    { "id": "decembre",  "fr": "décembre",  "short": "DÉC", "ecrit": "", "image": "images/mois/decembre.webp",  "audio": "audio/mois/decembre.m4a" }
   ]
 }

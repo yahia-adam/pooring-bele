@@ -1,0 +1,11 @@
+{
+  "appName": "Poorʼíŋ Beléŋ",
+  "tagline": "Apprends le fur en t'amusant !",
+  "avatars": ["🦁", "🐘", "🦒", "🦓", "🐪", "🦅", "🐆", "🐒", "🌻", "⭐", "🌙", "🔥"],
+  "quiz": {
+    "questionsPerLesson": 10,
+    "coinsPerCorrect": 2,
+    "coinsLessonBonus": 5,
+    "starThresholds": { "three": 90, "two": 70, "one": 50 }
+  }
+}

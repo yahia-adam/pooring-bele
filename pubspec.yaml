@@ -1,0 +1,51 @@
+name: pooring_bele
+description: "Poorʼíŋ Beléŋ — application ludique d'apprentissage du fur pour enfants."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5+1
+  shared_preferences: ^2.5.5
+  audioplayers: ^6.7.1
+  google_fonts: ^8.2.1
+  characters: ^1.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+
+  # Tout le contenu pédagogique vit dans /content (JSON + médias).
+  # Pour ajouter des images/audio : déposer les fichiers dans le bon
+  # sous-dossier (ex. content/images/couleurs/rouge.webp) — l'app les
+  # détecte automatiquement, sinon elle affiche un visuel de secours.
+  assets:
+    - content/
+    - content/categories/
+    - content/images/lettres/
+    - content/images/chiffres/
+    - content/images/couleurs/
+    - content/images/jours/
+    - content/images/mois/
+    - content/images/famille/
+    - content/audio/lettres/
+    - content/audio/chiffres/
+    - content/audio/couleurs/
+    - content/audio/jours/
+    - content/audio/mois/
+    - content/audio/famille/

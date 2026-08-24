@@ -1,36 +1,81 @@
 # Contenu JSON
 
+Tout le contenu pédagogique de l'app vit ici. **Aucun code à toucher** : on
+édite les JSON, on dépose les médias, on rebuild.
+
 ```
 content/
-├── manifest.json              ← liste des niveaux et catégories
-└── categories/
-    ├── lettres.json           ← les 26 lettres du fur
-    └── chiffres.json          ← les nombres (0→100, puis 200…900, 1000 … 1 000 000 000)
+├── config.json                ← nom de l'app, avatars, réglages du quiz, clavier fur
+├── manifest.json              ← niveaux et catégories (couleur, emoji, pack)
+├── categories/
+│   ├── lettres.json           ← l'alphabet fur
+│   ├── chiffres.json          ← les nombres
+│   ├── couleurs.json
+│   ├── jours.json
+│   ├── mois.json
+│   └── famille.json
+├── images/<catégorie>/        ← déposer les illustrations (.webp conseillé)
+└── audio/<catégorie>/         ← déposer les enregistrements natifs (.m4a)
 ```
 
-## Champs d'une lettre
+## Comment l'app utilise ces fichiers
+
+- **Image** : si `images/couleurs/rouge.webp` existe, l'app l'affiche ; sinon
+  elle dessine un visuel de secours (pastille de couleur, lettre, chiffre,
+  mini-calendrier, emoji) → l'app est jouable même sans illustrations.
+- **Audio** : le jeu est « on écoute le mot, on tape sur le bon élément ».
+  Si `audio/couleurs/rouge.m4a` existe, l'app le joue ; sinon elle essaie
+  `mediaBaseUrl` (CDN) ; sans aucun des deux la question reste silencieuse —
+  fournir l'audio est donc essentiel.
+
+## manifest.json
+
 | Champ | Sens |
 |-------|------|
-| `id` | identifiant (ne pas changer) |
-| `upper` | la lettre en MAJUSCULE |
-| `lower` | la lettre en minuscule |
-| `image` | fichier image |
-| `audio` | fichier son |
+| `mediaBaseUrl` | préfixe CDN optionnel pour les médias non embarqués |
+| `levels[].title` / `subtitle` | titre du niveau sur la carte |
+| `categories[].id` | identifiant, doit correspondre aux dossiers de médias |
+| `categories[].kind` | `letters`, `numbers`, `colors`, `calendar` ou `words` — choisit le visuel de secours |
+| `categories[].color` | couleur d'accent `#RRGGBB` de la catégorie |
+| `categories[].emoji` | emoji de la tuile d'accueil |
+| `categories[].pack` | chemin du JSON des mots |
 
-## Champs d'un chiffre
+Un niveau se déverrouille quand le niveau précédent totalise au moins une
+étoile par catégorie.
+
+## Champs d'un mot (`categories/*.json`)
+
 | Champ | Sens |
 |-------|------|
-| `id` | identifiant |
-| `chiffre` | le nombre écrit **en chiffres** (ex. `"42"`) — universel |
-| `ecrit` | le nombre écrit **en toutes lettres, en fur** (ex. `dííg`) — **à remplir par toi** |
-| `image` | fichier image |
-| `audio` | fichier son |
+| `id` | identifiant (ne pas changer, sert à la progression) |
+| `ecrit` | le mot **en fur** — à remplir par le référent linguistique (UTF-8 : Ŋ ŋ, Ɨ ɨ, Ʉ ʉ, A̠ a̠, tons) |
+| `fr` | traduction française (affichée tant que `ecrit` est vide) |
+| `upper` / `lower` | lettres seulement : majuscule / minuscule |
+| `chiffre` | nombres seulement : le nombre en chiffres (`"42"`) |
+| `hex` | couleurs seulement : la couleur `#RRGGBB` de la pastille |
+| `short` | jours/mois seulement : abréviation du mini-calendrier (`LUN`, `JAN`) |
+| `emoji` | famille, etc. : emoji de secours |
+| `image` | chemin de l'illustration (relatif à `content/`) |
+| `audio` | chemin de l'enregistrement (relatif à `content/`) |
 
-## À faire par toi
-- Remplir le champ `ecrit` des chiffres (le mot en fur).
-- Fournir les fichiers `image` et `audio`.
+## config.json
+
+- `appName`, `tagline` — identité affichée dans l'app ;
+- `avatars` — emojis proposés à l'enfant ;
+- `quiz.questionsPerLesson`, `coinsPerCorrect`, `coinsLessonBonus` —
+  économie du jeu ;
+- `quiz.starThresholds` — % de bonnes réponses pour 3/2/1 étoiles.
+
+## Ajouter une catégorie
+
+1. Créer `categories/ma_categorie.json` (mêmes champs que ci-dessus).
+2. L'ajouter dans `manifest.json` (id, titre, `kind`, couleur, emoji, pack).
+3. Créer `images/ma_categorie/` et `audio/ma_categorie/` et déclarer ces deux
+   dossiers dans la section `assets:` de `pubspec.yaml`.
+4. `flutter test` puis rebuild.
 
 ## Notes
-- `manifest.json` : les catégories et le chemin de chaque pack. `mediaBaseUrl` = préfixe commun aux `image`/`audio`.
-- Je ne peux pas lister chaque entier jusqu'à un milliard (ça ferait un milliard de lignes). J'ai mis 0→100 un par un, puis les centaines et les paliers (1000, 10000 … 1 000 000 000). Ajoute les nombres précis dont tu as besoin, ou compose-les dans l'app.
-- Caractères spéciaux (`Ŋ ŋ`, `Ɨ ɨ`, `Ʉ ʉ`, `A̠ a̠`) : garde les fichiers en UTF-8.
+
+- Garder tous les fichiers en **UTF-8**.
+- Les mauvaises réponses des QCM sont tirées de la même catégorie.
+- Formats conseillés : images `.webp` carrées ≥ 512 px, audio `.m4a` (AAC).

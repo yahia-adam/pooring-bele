@@ -1,0 +1,14 @@
+# Icônes générées depuis assets_dev/icon.png
+# Regénérer : dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets_dev/icon.png"
+  android: true
+  adaptive_icon_background: "#3FA9F5"
+  adaptive_icon_foreground: "assets_dev/icon_fg.png"
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets_dev/icon.png"
+    background_color: "#3FA9F5"
+    theme_color: "#3FA9F5"

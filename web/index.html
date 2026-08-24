@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Poorʼíŋ Beléŋ — apprends le fur (fòòr) en t'amusant : images, sons et petits jeux pour les enfants.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#3FA9F5">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Poorʼíŋ Beléŋ">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Poorʼíŋ Beléŋ — Apprendre le fur</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    html, body { margin: 0; padding: 0; background: #3FA9F5; height: 100%; }
+    #splash {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      background: linear-gradient(#3FA9F5, #7DC9FA);
+      font-family: "Segoe UI", sans-serif; color: #fff;
+    }
+    #splash .sun { font-size: 64px; animation: bounce 1.2s ease-in-out infinite; }
+    #splash .name { font-size: 28px; font-weight: 800; letter-spacing: 1px; }
+    @keyframes bounce { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-12px);} }
+  </style>
+</head>
+<body>
+  <div id="splash">
+    <div class="sun">☀️</div>
+    <div class="name">Poorʼíŋ Beléŋ</div>
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var splash = document.getElementById('splash');
+      if (splash) splash.remove();
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

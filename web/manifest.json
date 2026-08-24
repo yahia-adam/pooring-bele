@@ -1,0 +1,36 @@
+{
+    "name": "Poorʼíŋ Beléŋ — Apprendre le fur",
+    "short_name": "Poorʼíŋ Beléŋ",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#3FA9F5",
+    "theme_color": "#3FA9F5",
+    "description": "Apprends le fur (fòòr) en t'amusant : images, sons et petits jeux pour les enfants.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "lang": "fr",
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
