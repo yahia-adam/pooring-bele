@@ -45,7 +45,5 @@ flutter:
     - content/images/famille/
     - content/audio/lettres/
     - content/audio/chiffres/
-    - content/audio/couleurs/
     - content/audio/jours/
     - content/audio/mois/
-    - content/audio/famille/
