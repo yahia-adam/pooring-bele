@@ -1,12 +1,12 @@
 {
   "category": "jours",
   "items": [
-    { "id": "lundi",    "fr": "lundi",    "short": "LUN", "ecrit": "", "image": "images/jours/lundi.webp",    "audio": "audio/jours/lundi.m4a" },
-    { "id": "mardi",    "fr": "mardi",    "short": "MAR", "ecrit": "", "image": "images/jours/mardi.webp",    "audio": "audio/jours/mardi.m4a" },
-    { "id": "mercredi", "fr": "mercredi", "short": "MER", "ecrit": "", "image": "images/jours/mercredi.webp", "audio": "audio/jours/mercredi.m4a" },
-    { "id": "jeudi",    "fr": "jeudi",    "short": "JEU", "ecrit": "", "image": "images/jours/jeudi.webp",    "audio": "audio/jours/jeudi.m4a" },
-    { "id": "vendredi", "fr": "vendredi", "short": "VEN", "ecrit": "", "image": "images/jours/vendredi.webp", "audio": "audio/jours/vendredi.m4a" },
-    { "id": "samedi",   "fr": "samedi",   "short": "SAM", "ecrit": "", "image": "images/jours/samedi.webp",   "audio": "audio/jours/samedi.m4a" },
-    { "id": "dimanche", "fr": "dimanche", "short": "DIM", "ecrit": "", "image": "images/jours/dimanche.webp", "audio": "audio/jours/dimanche.m4a" }
+    { "id": "lundi",    "fr": "lundi",    "short": "LUN", "ecrit": "", "image": "images/jours/lundi.webp",    "audio": "audio/jours/1.m4a" },
+    { "id": "mardi",    "fr": "mardi",    "short": "MAR", "ecrit": "", "image": "images/jours/mardi.webp",    "audio": "audio/jours/2.m4a" },
+    { "id": "mercredi", "fr": "mercredi", "short": "MER", "ecrit": "", "image": "images/jours/mercredi.webp", "audio": "audio/jours/3.m4a" },
+    { "id": "jeudi",    "fr": "jeudi",    "short": "JEU", "ecrit": "", "image": "images/jours/jeudi.webp",    "audio": "audio/jours/4.m4a" },
+    { "id": "vendredi", "fr": "vendredi", "short": "VEN", "ecrit": "", "image": "images/jours/vendredi.webp", "audio": "audio/jours/5.m4a" },
+    { "id": "samedi",   "fr": "samedi",   "short": "SAM", "ecrit": "", "image": "images/jours/samedi.webp",   "audio": "audio/jours/6.m4a" },
+    { "id": "dimanche", "fr": "dimanche", "short": "DIM", "ecrit": "", "image": "images/jours/dimanche.webp", "audio": "audio/jours/7.m4a" }
   ]
 }

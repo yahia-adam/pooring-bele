@@ -41,12 +41,9 @@
     { "id": "700", "chiffre": "700", "ecrit": "", "image": "images/chiffres/700.webp", "audio": "audio/chiffres/700.m4a" },
     { "id": "800", "chiffre": "800", "ecrit": "", "image": "images/chiffres/800.webp", "audio": "audio/chiffres/800.m4a" },
     { "id": "900", "chiffre": "900", "ecrit": "", "image": "images/chiffres/900.webp", "audio": "audio/chiffres/900.m4a" },
-    { "id": "1000",       "chiffre": "1000",       "ecrit": "", "image": "images/chiffres/1000.webp",       "audio": "audio/chiffres/1000.m4a" },
-    { "id": "10000",      "chiffre": "10000",      "ecrit": "", "image": "images/chiffres/10000.webp",      "audio": "audio/chiffres/10000.m4a" },
-    { "id": "100000",     "chiffre": "100000",     "ecrit": "", "image": "images/chiffres/100000.webp",     "audio": "audio/chiffres/100000.m4a" },
-    { "id": "1000000",    "chiffre": "1000000",    "ecrit": "", "image": "images/chiffres/1000000.webp",    "audio": "audio/chiffres/1000000.m4a" },
-    { "id": "10000000",   "chiffre": "10000000",   "ecrit": "", "image": "images/chiffres/10000000.webp",   "audio": "audio/chiffres/10000000.m4a" },
-    { "id": "100000000",  "chiffre": "100000000",  "ecrit": "", "image": "images/chiffres/100000000.webp",  "audio": "audio/chiffres/100000000.m4a" },
-    { "id": "1000000000", "chiffre": "1000000000", "ecrit": "", "image": "images/chiffres/1000000000.webp", "audio": "audio/chiffres/1000000000.m4a" }
+    { "id": "1000",       "chiffre": "1000",       "ecrit": "", "image": "images/chiffres/1_000.webp",       "audio": "audio/chiffres/1_000.m4a" },
+    { "id": "1000000",    "chiffre": "1_000_000",    "ecrit": "", "image": "images/chiffres/1_000_000.webp",    "audio": "audio/chiffres/1_000_000.m4a" },
+    { "id": "10000000",   "chiffre": "1_000_000_000",   "ecrit": "", "image": "images/chiffres/1_000_000_000.webp",   "audio": "audio/chiffres/1_000_000_000.m4a" },
+    { "id": "1000000000", "chiffre": "1_000_000_000_000", "ecrit": "", "image": "images/chiffres/1_000_000_000_000.webp", "audio": "audio/chiffres/1_000_000_000_000.m4a" }
   ]
 }
