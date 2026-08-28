@@ -1,5 +1,5 @@
 {
-  "category": "Poor’íŋ belé’ŋ seebáŋa",
+  "category": "lettres",
   "items": [
     { "id": "a",   "upper": "A",  "lower": "a",  "image": "images/lettres/a.webp",   "audio": "audio/lettres/a.m4a" },
     { "id": "a2",  "upper": "A̠",  "lower": "a̠",  "image": "images/lettres/a2.webp",  "audio": "audio/lettres/a2.m4a" },

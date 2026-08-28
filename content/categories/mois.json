@@ -1,17 +1,17 @@
 {
   "category": "mois",
   "items": [
-    { "id": "janvier",   "fr": "janvier",   "short": "1", "ecrit": "", "image": "images/mois/janvier.webp",   "audio": "audio/mois/1.m4a" },
-    { "id": "fevrier",   "fr": "février",   "short": "2", "ecrit": "", "image": "images/mois/fevrier.webp",   "audio": "audio/mois/2.m4a" },
-    { "id": "mars",      "fr": "mars",      "short": "3", "ecrit": "", "image": "images/mois/mars.webp",      "audio": "audio/mois/3.m4a" },
-    { "id": "avril",     "fr": "avril",     "short": "4", "ecrit": "", "image": "images/mois/avril.webp",     "audio": "audio/mois/4.m4a" },
-    { "id": "mai",       "fr": "mai",       "short": "5", "ecrit": "", "image": "images/mois/mai.webp",       "audio": "audio/mois/5.m4a" },
-    { "id": "juin",      "fr": "juin",      "short": "6", "ecrit": "", "image": "images/mois/juin.webp",      "audio": "audio/mois/6.m4a" },
-    { "id": "juillet",   "fr": "juillet",   "short": "7", "ecrit": "", "image": "images/mois/juillet.webp",   "audio": "audio/mois/7.m4a" },
-    { "id": "aout",      "fr": "août",      "short": "8", "ecrit": "", "image": "images/mois/aout.webp",      "audio": "audio/mois/8.m4a" },
-    { "id": "septembre", "fr": "septembre", "short": "9", "ecrit": "", "image": "images/mois/septembre.webp", "audio": "audio/mois/9.m4a" },
-    { "id": "octobre",   "fr": "octobre",   "short": "10", "ecrit": "", "image": "images/mois/octobre.webp",   "audio": "audio/mois/10.m4a" },
-    { "id": "novembre",  "fr": "novembre",  "short": "11", "ecrit": "", "image": "images/mois/novembre.webp",  "audio": "audio/mois/11.m4a" },
-    { "id": "decembre",  "fr": "décembre",  "short": "12", "ecrit": "", "image": "images/mois/decembre.webp",  "audio": "audio/mois/12.m4a" }
+    { "id": "janvier",   "fr": "janvier",   "short": "1", "ecrit": "Taanɨ̂líŋ", "image": "images/mois/janvier.webp",   "audio": "audio/mois/1.m4a" },
+    { "id": "fevrier",   "fr": "février",   "short": "2", "ecrit": "Noyóŋ", "image": "images/mois/fevrier.webp",   "audio": "audio/mois/2.m4a" },
+    { "id": "mars",      "fr": "mars",      "short": "3", "ecrit": "Sǔbuŋáŋ", "image": "images/mois/mars.webp",      "audio": "audio/mois/3.m4a" },
+    { "id": "avril",     "fr": "avril",     "short": "4", "ecrit": "koósaŋáŋ", "image": "images/mois/avril.webp",     "audio": "audio/mois/4.m4a" },
+    { "id": "mai",       "fr": "mai",       "short": "5", "ecrit": "Dǒrŋâŋ", "image": "images/mois/mai.webp",       "audio": "audio/mois/5.m4a" },
+    { "id": "juin",      "fr": "juin",      "short": "6", "ecrit": "Potáŋ", "image": "images/mois/juin.webp",      "audio": "audio/mois/6.m4a" },
+    { "id": "juillet",   "fr": "juillet",   "short": "7", "ecrit": "Kuyweél", "image": "images/mois/juillet.webp",   "audio": "audio/mois/7.m4a" },
+    { "id": "aout",      "fr": "août",      "short": "8", "ecrit": "koróŋ", "image": "images/mois/aout.webp",      "audio": "audio/mois/8.m4a" },
+    { "id": "septembre", "fr": "septembre", "short": "9", "ecrit": "Ʉróŋ", "image": "images/mois/septembre.webp", "audio": "audio/mois/9.m4a" },
+    { "id": "octobre",   "fr": "octobre",   "short": "10", "ecrit": "Ederáŋ", "image": "images/mois/octobre.webp",   "audio": "audio/mois/10.m4a" },
+    { "id": "novembre",  "fr": "novembre",  "short": "11", "ecrit": "Taáŋ", "image": "images/mois/novembre.webp",  "audio": "audio/mois/11.m4a" },
+    { "id": "decembre",  "fr": "décembre",  "short": "12", "ecrit": "Taadorol", "image": "images/mois/decembre.webp",  "audio": "audio/mois/12.m4a" }
   ]
 }
