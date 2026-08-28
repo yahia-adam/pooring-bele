@@ -1,4 +1,4 @@
-# Poorʼíŋ Beléŋ — apprendre le fur en s'amusant ☀️
+# Poor'íŋ Belé — apprendre le fur en s'amusant ☀️
 
 Application Flutter (Android · iOS · Web) d'apprentissage du vocabulaire **fur**
 (fòòr) pour les enfants de 5 à 12 ans : images, sons, petits jeux, étoiles et

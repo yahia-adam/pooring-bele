@@ -3,7 +3,7 @@
          quand ils ne sont pas embarqués. Aucune autre communication réseau. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="Poorʼíŋ Beléŋ"
+        android:label="Poor'íŋ Belé"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

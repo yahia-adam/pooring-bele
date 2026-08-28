@@ -29,7 +29,7 @@ class AppConfig {
     final thresholds =
         (quiz['starThresholds'] as Map<String, dynamic>?) ?? const {};
     return AppConfig(
-      appName: json['appName'] as String? ?? 'Poorʼíŋ Beléŋ',
+      appName: json['appName'] as String? ?? 'Poor\'íŋ Belé',
       tagline: json['tagline'] as String? ?? '',
       avatars: List<String>.from(json['avatars'] as List? ?? const ['⭐']),
       questionsPerLesson: quiz['questionsPerLesson'] as int? ?? 10,
