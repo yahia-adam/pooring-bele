@@ -1,0 +1,229 @@
+{
+  "category": "voyelles_courtes_tons",
+  "items": [
+    {
+      "id": "a",
+      "ecrit": "a",
+      "upper": "a",
+      "image": "images/voyelles_courtes_tons/a.webp",
+      "audio": "audio/voyelles_courtes_tons/a.m4a"
+    },
+    {
+      "id": "a_h",
+      "ecrit": "á",
+      "upper": "á",
+      "image": "images/voyelles_courtes_tons/a_h.webp",
+      "audio": "audio/voyelles_courtes_tons/a_h.m4a"
+    },
+    {
+      "id": "a_f",
+      "ecrit": "â",
+      "upper": "â",
+      "image": "images/voyelles_courtes_tons/a_f.webp",
+      "audio": "audio/voyelles_courtes_tons/a_f.m4a"
+    },
+    {
+      "id": "a_r",
+      "ecrit": "ǎ",
+      "upper": "ǎ",
+      "image": "images/voyelles_courtes_tons/a_r.webp",
+      "audio": "audio/voyelles_courtes_tons/a_r.m4a"
+    },
+    {
+      "id": "a2",
+      "ecrit": "a̠",
+      "upper": "a̠",
+      "image": "images/voyelles_courtes_tons/a2.webp",
+      "audio": "audio/voyelles_courtes_tons/a2.m4a"
+    },
+    {
+      "id": "a2_h",
+      "ecrit": "á̠",
+      "upper": "á̠",
+      "image": "images/voyelles_courtes_tons/a2_h.webp",
+      "audio": "audio/voyelles_courtes_tons/a2_h.m4a"
+    },
+    {
+      "id": "a2_f",
+      "ecrit": "â̠",
+      "upper": "â̠",
+      "image": "images/voyelles_courtes_tons/a2_f.webp",
+      "audio": "audio/voyelles_courtes_tons/a2_f.m4a"
+    },
+    {
+      "id": "a2_r",
+      "ecrit": "ǎ̠",
+      "upper": "ǎ̠",
+      "image": "images/voyelles_courtes_tons/a2_r.webp",
+      "audio": "audio/voyelles_courtes_tons/a2_r.m4a"
+    },
+    {
+      "id": "e",
+      "ecrit": "e",
+      "upper": "e",
+      "image": "images/voyelles_courtes_tons/e.webp",
+      "audio": "audio/voyelles_courtes_tons/e.m4a"
+    },
+    {
+      "id": "e_h",
+      "ecrit": "é",
+      "upper": "é",
+      "image": "images/voyelles_courtes_tons/e_h.webp",
+      "audio": "audio/voyelles_courtes_tons/e_h.m4a"
+    },
+    {
+      "id": "e_f",
+      "ecrit": "ê",
+      "upper": "ê",
+      "image": "images/voyelles_courtes_tons/e_f.webp",
+      "audio": "audio/voyelles_courtes_tons/e_f.m4a"
+    },
+    {
+      "id": "e_r",
+      "ecrit": "ě",
+      "upper": "ě",
+      "image": "images/voyelles_courtes_tons/e_r.webp",
+      "audio": "audio/voyelles_courtes_tons/e_r.m4a"
+    },
+    {
+      "id": "i",
+      "ecrit": "i",
+      "upper": "i",
+      "image": "images/voyelles_courtes_tons/i.webp",
+      "audio": "audio/voyelles_courtes_tons/i.m4a"
+    },
+    {
+      "id": "i_h",
+      "ecrit": "í",
+      "upper": "í",
+      "image": "images/voyelles_courtes_tons/i_h.webp",
+      "audio": "audio/voyelles_courtes_tons/i_h.m4a"
+    },
+    {
+      "id": "i_f",
+      "ecrit": "î",
+      "upper": "î",
+      "image": "images/voyelles_courtes_tons/i_f.webp",
+      "audio": "audio/voyelles_courtes_tons/i_f.m4a"
+    },
+    {
+      "id": "i_r",
+      "ecrit": "ǐ",
+      "upper": "ǐ",
+      "image": "images/voyelles_courtes_tons/i_r.webp",
+      "audio": "audio/voyelles_courtes_tons/i_r.m4a"
+    },
+    {
+      "id": "i2",
+      "ecrit": "ɨ",
+      "upper": "ɨ",
+      "image": "images/voyelles_courtes_tons/i2.webp",
+      "audio": "audio/voyelles_courtes_tons/i2.m4a"
+    },
+    {
+      "id": "i2_h",
+      "ecrit": "ɨ́",
+      "upper": "ɨ́",
+      "image": "images/voyelles_courtes_tons/i2_h.webp",
+      "audio": "audio/voyelles_courtes_tons/i2_h.m4a"
+    },
+    {
+      "id": "i2_f",
+      "ecrit": "ɨ̂",
+      "upper": "ɨ̂",
+      "image": "images/voyelles_courtes_tons/i2_f.webp",
+      "audio": "audio/voyelles_courtes_tons/i2_f.m4a"
+    },
+    {
+      "id": "i2_r",
+      "ecrit": "ɨ̌",
+      "upper": "ɨ̌",
+      "image": "images/voyelles_courtes_tons/i2_r.webp",
+      "audio": "audio/voyelles_courtes_tons/i2_r.m4a"
+    },
+    {
+      "id": "o",
+      "ecrit": "o",
+      "upper": "o",
+      "image": "images/voyelles_courtes_tons/o.webp",
+      "audio": "audio/voyelles_courtes_tons/o.m4a"
+    },
+    {
+      "id": "o_h",
+      "ecrit": "ó",
+      "upper": "ó",
+      "image": "images/voyelles_courtes_tons/o_h.webp",
+      "audio": "audio/voyelles_courtes_tons/o_h.m4a"
+    },
+    {
+      "id": "o_f",
+      "ecrit": "ô",
+      "upper": "ô",
+      "image": "images/voyelles_courtes_tons/o_f.webp",
+      "audio": "audio/voyelles_courtes_tons/o_f.m4a"
+    },
+    {
+      "id": "o_r",
+      "ecrit": "ǒ",
+      "upper": "ǒ",
+      "image": "images/voyelles_courtes_tons/o_r.webp",
+      "audio": "audio/voyelles_courtes_tons/o_r.m4a"
+    },
+    {
+      "id": "u",
+      "ecrit": "u",
+      "upper": "u",
+      "image": "images/voyelles_courtes_tons/u.webp",
+      "audio": "audio/voyelles_courtes_tons/u.m4a"
+    },
+    {
+      "id": "u_h",
+      "ecrit": "ú",
+      "upper": "ú",
+      "image": "images/voyelles_courtes_tons/u_h.webp",
+      "audio": "audio/voyelles_courtes_tons/u_h.m4a"
+    },
+    {
+      "id": "u_f",
+      "ecrit": "û",
+      "upper": "û",
+      "image": "images/voyelles_courtes_tons/u_f.webp",
+      "audio": "audio/voyelles_courtes_tons/u_f.m4a"
+    },
+    {
+      "id": "u_r",
+      "ecrit": "ǔ",
+      "upper": "ǔ",
+      "image": "images/voyelles_courtes_tons/u_r.webp",
+      "audio": "audio/voyelles_courtes_tons/u_r.m4a"
+    },
+    {
+      "id": "u2",
+      "ecrit": "ʉ",
+      "upper": "ʉ",
+      "image": "images/voyelles_courtes_tons/u2.webp",
+      "audio": "audio/voyelles_courtes_tons/u2.m4a"
+    },
+    {
+      "id": "u2_h",
+      "ecrit": "ʉ́",
+      "upper": "ʉ́",
+      "image": "images/voyelles_courtes_tons/u2_h.webp",
+      "audio": "audio/voyelles_courtes_tons/u2_h.m4a"
+    },
+    {
+      "id": "u2_f",
+      "ecrit": "ʉ̂",
+      "upper": "ʉ̂",
+      "image": "images/voyelles_courtes_tons/u2_f.webp",
+      "audio": "audio/voyelles_courtes_tons/u2_f.m4a"
+    },
+    {
+      "id": "u2_r",
+      "ecrit": "ʉ̌",
+      "upper": "ʉ̌",
+      "image": "images/voyelles_courtes_tons/u2_r.webp",
+      "audio": "audio/voyelles_courtes_tons/u2_r.m4a"
+    }
+  ]
+}

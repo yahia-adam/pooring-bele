@@ -6,8 +6,12 @@
       "title": "Niveau 1",
       "subtitle": "Les bases",
       "categories": [
-        { "id": "lettres",  "title": "Les lettres",  "kind": "letters", "color": "#F4A62A", "emoji": "🔤", "pack": "categories/lettres.json" },
-        { "id": "chiffres", "title": "Les chiffres", "kind": "numbers", "color": "#3C6FB3", "emoji": "🔢", "pack": "categories/chiffres.json" }
+        { "id": "lettres",              "title": "Les lettres",                    "kind": "letters", "color": "#F4A62A", "emoji": "🔤", "pack": "categories/lettres.json" },
+        { "id": "voyelles_courtes",     "title": "Les voyelles courtes",           "kind": "letters", "color": "#7CB342", "emoji": "🔡", "pack": "categories/voyelles_courtes.json" },
+        { "id": "voyelles_longues",     "title": "Les voyelles longues",           "kind": "letters", "color": "#00ACC1", "emoji": "🔠", "pack": "categories/voyelles_longues.json" },
+        { "id": "voyelles_courtes_tons","title": "Voyelles courtes avec tons",     "kind": "letters", "color": "#EC407A", "emoji": "🎵", "pack": "categories/voyelles_courtes_tons.json" },
+        { "id": "voyelles_longues_tons","title": "Voyelles longues avec tons",     "kind": "letters", "color": "#5E35B1", "emoji": "🎶", "pack": "categories/voyelles_longues_tons.json" },
+        { "id": "chiffres",             "title": "Les chiffres",                   "kind": "numbers", "color": "#3C6FB3", "emoji": "🔢", "pack": "categories/chiffres.json" }
       ]
     },
     {

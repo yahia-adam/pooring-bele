@@ -43,7 +43,15 @@ flutter:
     - content/images/jours/
     - content/images/mois/
     - content/images/famille/
+    - content/images/voyelles_courtes/
+    - content/images/voyelles_longues/
+    - content/images/voyelles_courtes_tons/
+    - content/images/voyelles_longues_tons/
     - content/audio/lettres/
     - content/audio/chiffres/
     - content/audio/jours/
     - content/audio/mois/
+    - content/audio/voyelles_courtes/
+    - content/audio/voyelles_longues/
+    - content/audio/voyelles_courtes_tons/
+    - content/audio/voyelles_longues_tons/

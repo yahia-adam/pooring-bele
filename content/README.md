@@ -8,8 +8,12 @@ content/
 ├── config.json                ← nom de l'app, avatars, réglages du quiz, clavier fur
 ├── manifest.json              ← niveaux et catégories (couleur, emoji, pack)
 ├── categories/
-│   ├── lettres.json           ← l'alphabet fur
-│   ├── chiffres.json          ← les nombres
+│   ├── lettres.json                    ← l'alphabet fur (majuscules/minuscules)
+│   ├── voyelles_courtes.json           ← les 8 voyelles courtes
+│   ├── voyelles_longues.json           ← les 8 voyelles longues (doublées)
+│   ├── voyelles_courtes_tons.json      ← voyelles courtes × 4 tons (32)
+│   ├── voyelles_longues_tons.json      ← voyelles longues × 4 mélodies de ton (32)
+│   ├── chiffres.json                   ← les nombres
 │   ├── couleurs.json
 │   ├── jours.json
 │   ├── mois.json
@@ -42,6 +46,20 @@ content/
 
 Un niveau se déverrouille quand le niveau précédent totalise au moins une
 étoile par catégorie.
+
+### Voyelles et tons
+
+Le fur distingue les voyelles **courtes** (a, a̠, e, i, ɨ, o, u, ʉ) et
+**longues** (doublées : aa, a̠a̠…), et chacune peut porter un **ton** :
+- Voyelle courte : plate, haute (´), descendante (^), montante (ˇ) — 4 formes.
+- Voyelle longue : le ton se répartit sur les deux mores — plate-plate,
+  haute-haute, haute-plate, plate-haute (`aa áá áa aá`) — 4 formes.
+
+Ces 4 catégories (`voyelles_courtes`, `voyelles_longues`,
+`voyelles_courtes_tons`, `voyelles_longues_tons`) réutilisent les mêmes
+identifiants que `lettres.json` pour les voyelles de base (`a`, `a2`, `e`,
+`i`, `i2`, `o`, `u`, `u2`), avec des suffixes `_h`/`_f`/`_r` (ton court) ou
+`_ll`/`_hh`/`_hl`/`_lh` (ton long) pour les variantes.
 
 ## Champs d'un mot (`categories/*.json`)
 

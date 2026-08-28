@@ -1,0 +1,69 @@
+{
+  "category": "voyelles_courtes",
+  "items": [
+    {
+      "id": "a",
+      "ecrit": "a",
+      "upper": "A",
+      "lower": "a",
+      "image": "images/voyelles_courtes/a.webp",
+      "audio": "audio/voyelles_courtes/a.m4a"
+    },
+    {
+      "id": "a2",
+      "ecrit": "a̠",
+      "upper": "A̠",
+      "lower": "a̠",
+      "image": "images/voyelles_courtes/a2.webp",
+      "audio": "audio/voyelles_courtes/a2.m4a"
+    },
+    {
+      "id": "e",
+      "ecrit": "e",
+      "upper": "E",
+      "lower": "e",
+      "image": "images/voyelles_courtes/e.webp",
+      "audio": "audio/voyelles_courtes/e.m4a"
+    },
+    {
+      "id": "i",
+      "ecrit": "i",
+      "upper": "I",
+      "lower": "i",
+      "image": "images/voyelles_courtes/i.webp",
+      "audio": "audio/voyelles_courtes/i.m4a"
+    },
+    {
+      "id": "i2",
+      "ecrit": "ɨ",
+      "upper": "Ɨ",
+      "lower": "ɨ",
+      "image": "images/voyelles_courtes/i2.webp",
+      "audio": "audio/voyelles_courtes/i2.m4a"
+    },
+    {
+      "id": "o",
+      "ecrit": "o",
+      "upper": "O",
+      "lower": "o",
+      "image": "images/voyelles_courtes/o.webp",
+      "audio": "audio/voyelles_courtes/o.m4a"
+    },
+    {
+      "id": "u",
+      "ecrit": "u",
+      "upper": "U",
+      "lower": "u",
+      "image": "images/voyelles_courtes/u.webp",
+      "audio": "audio/voyelles_courtes/u.m4a"
+    },
+    {
+      "id": "u2",
+      "ecrit": "ʉ",
+      "upper": "Ʉ",
+      "lower": "ʉ",
+      "image": "images/voyelles_courtes/u2.webp",
+      "audio": "audio/voyelles_courtes/u2.m4a"
+    }
+  ]
+}
