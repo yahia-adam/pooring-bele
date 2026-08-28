@@ -1,5 +1,5 @@
 name: pooring_bele
-description: "Poorʼíŋ Beléŋ — application ludique d'apprentissage du fur pour enfants."
+description: "Poor'íŋ Belé — application ludique d'apprentissage du fur pour enfants."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -55,3 +55,15 @@ flutter:
     - content/audio/voyelles_longues/
     - content/audio/voyelles_courtes_tons/
     - content/audio/voyelles_longues_tons/
+
+  # Police embarquée (pas via google_fonts) pour le texte en fur : le contenu
+  # vient de JSON chargés au runtime, donc le sous-ensemble de glyphes que
+  # google_fonts calcule à la compilation ne le voit pas — certains tons
+  # combinés (ex. voyelle + diacritique) s'affichaient en glyphe manquant.
+  # Le fichier complet garantit la couverture (Ŋ, Ɨ, Ʉ, A̠, tons ´ ˆ ˇ).
+  fonts:
+    - family: NotoSansFur
+      fonts:
+        - asset: assets/fonts/NotoSans-Variable.ttf
+        - asset: assets/fonts/NotoSans-Variable.ttf
+          weight: 700

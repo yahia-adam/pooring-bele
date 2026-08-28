@@ -47,13 +47,17 @@ class AppTheme {
     );
   }
 
-  /// Style pour le texte en fur : Noto Sans couvre Ŋ, Ɨ, Ʉ, A̠ et les tons.
+  /// Style pour le texte en fur : Noto Sans (embarqué) couvre Ŋ, Ɨ, Ʉ, A̠
+  /// et les tons combinés. Police embarquée plutôt que google_fonts car ce
+  /// texte vient de JSON chargés au runtime — le sous-ensemble de glyphes
+  /// que google_fonts calcule à la compilation ne les voit pas.
   static TextStyle furText({
     double fontSize = 24,
     FontWeight fontWeight = FontWeight.w700,
     Color color = AppColors.ink,
   }) =>
-      GoogleFonts.notoSans(
+      TextStyle(
+        fontFamily: 'NotoSansFur',
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
