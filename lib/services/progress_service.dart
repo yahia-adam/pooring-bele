@@ -42,14 +42,12 @@ class ProgressService extends ChangeNotifier {
 
   int get totalStars => _stars.values.fold(0, (a, b) => a + b);
 
-  /// Le niveau `index` est ouvert si le précédent totalise au moins
-  /// une étoile par catégorie (en moyenne).
+  /// Le niveau `index` est ouvert quand chaque catégorie du niveau
+  /// précédent a au moins une étoile.
   bool isLevelUnlocked(AppContent content, int index) {
     if (index <= 0) return true;
     final previous = content.manifest.levels[index - 1];
-    final earned =
-        previous.categories.fold(0, (sum, c) => sum + starsFor(c.id));
-    return earned >= previous.categories.length;
+    return previous.categories.every((c) => starsFor(c.id) > 0);
   }
 
   Future<void> setProfile({required String name, required String avatar}) {

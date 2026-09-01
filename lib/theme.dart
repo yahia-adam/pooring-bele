@@ -64,6 +64,73 @@ class AppTheme {
       );
 }
 
+/// Dimensions responsives centralisées.
+///
+/// Toutes les tailles de l'app partent d'une maquette de 390 pt de large
+/// (iPhone 12) et sont multipliées par un facteur d'échelle dérivé du côté
+/// court de l'écran, borné pour rester lisible du petit téléphone à la
+/// tablette. Règle du projet : aucun écran n'écrit de taille en dur, tout
+/// passe par `context.dims`.
+class AppDims {
+  /// Largeur de référence de la maquette.
+  static const _baseWidth = 390.0;
+
+  /// Largeur maximale du contenu centré (tablettes, web).
+  static const maxContentWidth = 560.0;
+
+  final double scale;
+
+  const AppDims(this.scale);
+
+  factory AppDims.of(BuildContext context) {
+    final shortest = MediaQuery.sizeOf(context).shortestSide;
+    return AppDims((shortest / _baseWidth).clamp(.8, 1.25));
+  }
+
+  /// Met une valeur de la maquette à l'échelle de l'écran courant.
+  double s(double base) => base * scale;
+
+  // Espacements.
+  double get gapXxs => s(4);
+  double get gapXs => s(8);
+  double get gapSm => s(12);
+  double get gapMd => s(16);
+  double get gapLg => s(22);
+  double get gapXl => s(28);
+
+  // Rayons d'angle.
+  double get radiusSm => s(14);
+  double get radiusMd => s(18);
+  double get radiusLg => s(22);
+  double get radiusXl => s(28);
+
+  // Icônes et emojis.
+  double get iconSm => s(16);
+  double get iconMd => s(24);
+  double get emojiSm => s(17);
+  double get emojiMd => s(24);
+  double get emojiLg => s(44);
+
+  // Étoiles de maîtrise.
+  double get starSm => s(22);
+  double get starMd => s(26);
+  double get starLg => s(54);
+  double get starXl => s(68);
+
+  // Composants.
+  double get headerAvatar => s(46);
+  double get backBubble => s(42);
+  double get logo => s(96);
+  double get speakerButton => s(84);
+  double get progressBarHeight => s(18);
+  double get categoryTileHeight => s(205);
+  double get textFieldRadius => s(18);
+}
+
+extension AppDimsX on BuildContext {
+  AppDims get dims => AppDims.of(this);
+}
+
 /// Teinte pastel dérivée de la couleur d'une catégorie (fond d'écran leçon).
 Color pastelOf(Color color, [double amount = .88]) =>
     Color.lerp(color, Colors.white, amount)!;

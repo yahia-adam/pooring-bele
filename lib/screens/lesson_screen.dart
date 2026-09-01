@@ -175,6 +175,8 @@ class _LessonScreenState extends State<LessonScreen> {
       return const Scaffold(body: SizedBox());
     }
 
+    final dims = context.dims;
+
     return Scaffold(
       backgroundColor: pastelOf(color),
       body: Column(
@@ -183,13 +185,13 @@ class _LessonScreenState extends State<LessonScreen> {
             decoration: BoxDecoration(
               color: color,
               borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(24)),
+                  BorderRadius.vertical(bottom: Radius.circular(dims.radiusLg)),
             ),
             padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + 8,
-              left: 14,
-              right: 14,
-              bottom: 12,
+              top: MediaQuery.of(context).padding.top + dims.gapXs,
+              left: dims.gapSm,
+              right: dims.gapSm,
+              bottom: dims.gapSm,
             ),
             child: Row(
               children: [
@@ -210,7 +212,8 @@ class _LessonScreenState extends State<LessonScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
+            padding: EdgeInsets.fromLTRB(
+                dims.gapMd, dims.gapMd, dims.gapMd, dims.gapXxs),
             child: LessonProgressBar(
               current: _index + 1,
               total: _exercises.length,
@@ -220,7 +223,8 @@ class _LessonScreenState extends State<LessonScreen> {
           Expanded(
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 560),
+                constraints:
+                    const BoxConstraints(maxWidth: AppDims.maxContentWidth),
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   child: Column(
@@ -229,22 +233,27 @@ class _LessonScreenState extends State<LessonScreen> {
                       Expanded(
                         flex: 3,
                         child: Center(
-                          child: BigRoundButton(
-                            icon: Icons.volume_up_rounded,
-                            color: color,
-                            onTap: _playCurrent,
+                          // La pulsation attire l'œil : « appuie ici pour
+                          // réécouter le mot ».
+                          child: Pulse(
+                            child: BigRoundButton(
+                              icon: Icons.volume_up_rounded,
+                              color: color,
+                              onTap: _playCurrent,
+                            ),
                           ),
                         ),
                       ),
                       Expanded(
                         flex: 5,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          padding: EdgeInsets.fromLTRB(
+                              dims.gapMd, 0, dims.gapMd, dims.gapMd),
                           child: GridView.count(
                             crossAxisCount: 2,
                             physics: const NeverScrollableScrollPhysics(),
-                            mainAxisSpacing: 14,
-                            crossAxisSpacing: 14,
+                            mainAxisSpacing: dims.gapSm,
+                            crossAxisSpacing: dims.gapSm,
                             childAspectRatio: 1.15,
                             children: [
                               for (final choice in _current.choices)
@@ -296,6 +305,7 @@ class _ChoiceFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dims = context.dims;
     final borderColor = switch (state) {
       _ChoiceState.correct => AppColors.correct,
       _ChoiceState.wrong => AppColors.wrong,
@@ -306,7 +316,7 @@ class _ChoiceFrame extends StatelessWidget {
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(dims.radiusMd),
         border: Border.all(color: borderColor, width: 3),
         boxShadow: [
           if (state == _ChoiceState.correct)
@@ -319,13 +329,47 @@ class _ChoiceFrame extends StatelessWidget {
             ),
         ],
       ),
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.all(dims.gapXs),
       child: child,
     );
 
-    final wrapped = state == _ChoiceState.wrong
-        ? Shake(trigger: shakeCounter, child: card)
-        : card;
+    Widget wrapped = switch (state) {
+      // Bonne réponse : la carte rebondit joyeusement et un confetti
+      // surgit dans le coin.
+      _ChoiceState.correct => TweenAnimationBuilder<double>(
+          tween: Tween(begin: .85, end: 1),
+          duration: const Duration(milliseconds: 550),
+          curve: Curves.elasticOut,
+          builder: (context, t, child) =>
+              Transform.scale(scale: t, child: child),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              card,
+              Positioned(
+                top: -dims.gapXs,
+                right: -dims.gapXxs,
+                child: Pop(
+                  delay: const Duration(milliseconds: 120),
+                  child: Text('🎉',
+                      style: TextStyle(fontSize: dims.emojiMd * 1.3)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      // Mauvaise réponse : secousse puis la carte s'estompe pour
+      // guider l'enfant vers les choix restants.
+      _ChoiceState.wrong => Shake(
+          trigger: shakeCounter,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 400),
+            opacity: .55,
+            child: card,
+          ),
+        ),
+      _ChoiceState.idle => card,
+    };
 
     return Bouncy(onTap: onTap, child: wrapped);
   }

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../theme.dart';
 
-/// Petit rebond au tap, façon jouet.
+/// Rebond au tap, façon jouet : s'écrase vite à l'appui puis revient
+/// avec un ressort élastique au relâchement.
 class Bouncy extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
@@ -26,11 +27,76 @@ class _BouncyState extends State<Bouncy> {
       onTapUp: (_) => setState(() => _pressed = false),
       onTap: widget.onTap,
       child: AnimatedScale(
-        scale: _pressed ? .93 : 1,
-        duration: const Duration(milliseconds: 110),
-        curve: Curves.easeOut,
+        scale: _pressed ? .9 : 1,
+        duration: Duration(milliseconds: _pressed ? 90 : 450),
+        curve: _pressed ? Curves.easeOut : Curves.elasticOut,
         child: widget.child,
       ),
+    );
+  }
+}
+
+/// Apparition élastique (pop de jouet) : bonnes réponses, récompenses…
+class Pop extends StatelessWidget {
+  final Widget child;
+  final Duration duration;
+  final Duration delay;
+
+  const Pop({
+    super.key,
+    required this.child,
+    this.duration = const Duration(milliseconds: 500),
+    this.delay = Duration.zero,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: duration + delay,
+      curve: Interval(
+        delay == Duration.zero
+            ? 0
+            : delay.inMilliseconds / (duration + delay).inMilliseconds,
+        1,
+        curve: Curves.elasticOut,
+      ),
+      builder: (context, t, child) => Transform.scale(scale: t, child: child),
+      child: child,
+    );
+  }
+}
+
+/// Pulsation douce et continue (respiration) : attire l'œil de l'enfant
+/// sur le bouton à presser, sans être agressive.
+class Pulse extends StatefulWidget {
+  final Widget child;
+
+  const Pulse({super.key, required this.child});
+
+  @override
+  State<Pulse> createState() => _PulseState();
+}
+
+class _PulseState extends State<Pulse> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1100),
+  )..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: Tween(begin: .97, end: 1.05).animate(
+        CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+      ),
+      child: widget.child,
     );
   }
 }
@@ -60,12 +126,15 @@ class Shake extends StatelessWidget {
 /// Les trois étoiles de maîtrise, celle du centre légèrement surélevée.
 class StarRow extends StatelessWidget {
   final int stars;
-  final double size;
 
-  const StarRow({super.key, required this.stars, this.size = 22});
+  /// Taille de base d'une étoile ; par défaut `dims.starSm`.
+  final double? size;
+
+  const StarRow({super.key, required this.stars, this.size});
 
   @override
   Widget build(BuildContext context) {
+    final starSize = size ?? context.dims.starSm;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -74,12 +143,12 @@ class StarRow extends StatelessWidget {
         final middle = i == 1;
         return Padding(
           padding: EdgeInsets.only(
-            bottom: middle ? size * .22 : 0,
+            bottom: middle ? starSize * .22 : 0,
             left: i == 0 ? 0 : 1,
           ),
           child: Icon(
             Icons.star_rounded,
-            size: middle ? size * 1.15 : size,
+            size: middle ? starSize * 1.15 : starSize,
             color: earned ? AppColors.starGold : AppColors.starGrey,
             shadows: earned
                 ? const [Shadow(color: Color(0x33B8860B), blurRadius: 4)]
@@ -106,17 +175,21 @@ class StatChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dims = context.dims;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(
+        horizontal: dims.gapSm,
+        vertical: dims.gapXxs + 2,
+      ),
       decoration: BoxDecoration(
         color: background ?? Colors.white.withValues(alpha: .22),
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(dims.radiusXl),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 17)),
-          const SizedBox(width: 6),
+          Text(emoji, style: TextStyle(fontSize: dims.emojiSm)),
+          SizedBox(width: dims.gapXxs + 2),
           Text(
             value,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -145,14 +218,15 @@ class LessonProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dims = context.dims;
     return Row(
       children: [
         Expanded(
           child: Container(
-            height: 18,
+            height: dims.progressBarHeight,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(dims.radiusSm),
               boxShadow: const [
                 BoxShadow(color: Color(0x14000000), blurRadius: 4),
               ],
@@ -165,11 +239,13 @@ class LessonProgressBar extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 350),
                     curve: Curves.easeOut,
-                    width: math.max(18, constraints.maxWidth * fraction),
+                    width: math.max(
+                        dims.progressBarHeight, constraints.maxWidth * fraction),
                     margin: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
                       color: color,
-                      borderRadius: BorderRadius.circular(9),
+                      borderRadius:
+                          BorderRadius.circular(dims.radiusSm * .6),
                     ),
                   ),
                 );
@@ -177,7 +253,7 @@ class LessonProgressBar extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: dims.gapSm),
         Text(
           '$current/$total',
           style: Theme.of(context)
@@ -194,7 +270,9 @@ class LessonProgressBar extends StatelessWidget {
 class BigRoundButton extends StatelessWidget {
   final IconData icon;
   final Color color;
-  final double size;
+
+  /// Diamètre ; par défaut `dims.speakerButton`.
+  final double? size;
   final VoidCallback onTap;
 
   const BigRoundButton({
@@ -202,16 +280,17 @@ class BigRoundButton extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.onTap,
-    this.size = 84,
+    this.size,
   });
 
   @override
   Widget build(BuildContext context) {
+    final diameter = size ?? context.dims.speakerButton;
     return Bouncy(
       onTap: onTap,
       child: Container(
-        width: size,
-        height: size,
+        width: diameter,
+        height: diameter,
         decoration: BoxDecoration(
           color: color,
           shape: BoxShape.circle,
@@ -223,13 +302,15 @@ class BigRoundButton extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, color: Colors.white, size: size * .5),
+        child: Icon(icon, color: Colors.white, size: diameter * .5),
       ),
     );
   }
 }
 
-/// Gros bouton d'action principal, arrondi et coloré.
+/// Gros bouton d'action principal, arrondi et coloré. Son contenu se
+/// réduit automatiquement si la place manque (petits écrans, gros texte
+/// système) au lieu de déborder.
 class PrimaryButton extends StatelessWidget {
   final String label;
   final Color color;
@@ -246,6 +327,7 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dims = context.dims;
     final enabled = onTap != null;
     return Bouncy(
       onTap: onTap,
@@ -253,10 +335,13 @@ class PrimaryButton extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         opacity: enabled ? 1 : .45,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 15),
+          padding: EdgeInsets.symmetric(
+            horizontal: dims.gapMd,
+            vertical: dims.gapSm + 2,
+          ),
           decoration: BoxDecoration(
             color: color,
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(dims.radiusLg),
             boxShadow: [
               BoxShadow(
                 color: darken(color, .28).withValues(alpha: .55),
@@ -265,23 +350,26 @@ class PrimaryButton extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, color: Colors.white, size: 26),
-                const SizedBox(width: 10),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, color: Colors.white, size: dims.iconMd),
+                  SizedBox(width: dims.gapXs),
+                ],
+                Text(
+                  label,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1,
+                      ),
+                ),
               ],
-              Text(
-                label,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1.2,
-                    ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -297,11 +385,12 @@ class BackBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dims = context.dims;
     return Bouncy(
       onTap: () => Navigator.of(context).maybePop(),
       child: Container(
-        width: 42,
-        height: 42,
+        width: dims.backBubble,
+        height: dims.backBubble,
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: .25),
           shape: BoxShape.circle,
@@ -309,7 +398,7 @@ class BackBubble extends StatelessWidget {
         child: Icon(
           Icons.arrow_back_ios_new_rounded,
           color: iconColor ?? Colors.white,
-          size: 20,
+          size: dims.backBubble * .48,
         ),
       ),
     );

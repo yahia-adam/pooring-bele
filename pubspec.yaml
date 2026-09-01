@@ -35,6 +35,7 @@ flutter:
   # sous-dossier (ex. content/images/couleurs/rouge.webp) — l'app les
   # détecte automatiquement, sinon elle affiche un visuel de secours.
   assets:
+    - assets/images/
     - content/
     - content/categories/
     - content/images/lettres/

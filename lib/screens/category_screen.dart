@@ -23,6 +23,7 @@ class CategoryScreen extends StatelessWidget {
     final progress = context.watch<ProgressService>();
     final items = content.itemsOf(category.id);
     final color = category.color;
+    final dims = context.dims;
 
     return Scaffold(
       backgroundColor: pastelOf(color),
@@ -31,17 +32,17 @@ class CategoryScreen extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               color: color,
-              borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(24)),
+              borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(dims.radiusLg)),
               boxShadow: const [
                 BoxShadow(color: Color(0x33000000), blurRadius: 8),
               ],
             ),
             padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + 8,
-              left: 14,
-              right: 14,
-              bottom: 12,
+              top: MediaQuery.of(context).padding.top + dims.gapXs,
+              left: dims.gapSm,
+              right: dims.gapSm,
+              bottom: dims.gapSm,
             ),
             child: Column(
               children: [
@@ -63,18 +64,20 @@ class CategoryScreen extends StatelessWidget {
                     StatChip(emoji: '🪙', value: '${progress.coins}'),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: dims.gapXs),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    StarRow(stars: progress.starsFor(category.id), size: 26),
-                    const SizedBox(width: 14),
+                    StarRow(
+                        stars: progress.starsFor(category.id),
+                        size: dims.starMd),
+                    SizedBox(width: dims.gapSm),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 3),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: dims.gapSm, vertical: dims.gapXxs),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: .22),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(dims.radiusLg),
                       ),
                       child: Text(
                         '${items.length} mots',
@@ -94,12 +97,13 @@ class CategoryScreen extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 640),
                 child: GridView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 110),
+                  padding: EdgeInsets.fromLTRB(
+                      dims.gapMd, dims.gapMd, dims.gapMd, dims.s(110)),
                   gridDelegate:
-                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 150,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
+                      SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: dims.s(150),
+                    mainAxisSpacing: dims.gapSm,
+                    crossAxisSpacing: dims.gapSm,
                     childAspectRatio: .82,
                   ),
                   itemCount: items.length,

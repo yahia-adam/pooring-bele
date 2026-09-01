@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = context.read<AppContent>();
     final progress = context.watch<ProgressService>();
+    final dims = context.dims;
 
     return Scaffold(
       body: Column(
@@ -25,9 +26,11 @@ class HomeScreen extends StatelessWidget {
           Expanded(
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 560),
+                constraints:
+                    const BoxConstraints(maxWidth: AppDims.maxContentWidth),
                 child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+                  padding: EdgeInsets.fromLTRB(
+                      dims.gapMd, dims.gapXs, dims.gapMd, dims.gapXl),
                   children: [
                     for (var i = 0; i < content.manifest.levels.length; i++)
                       _LevelSection(
@@ -36,11 +39,11 @@ class HomeScreen extends StatelessWidget {
                         unlocked: progress.isLevelUnlocked(content, i),
                         isLast: i == content.manifest.levels.length - 1,
                       ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: dims.gapSm),
                     Center(
                       child: Text(
                         '🏆',
-                        style: const TextStyle(fontSize: 44),
+                        style: TextStyle(fontSize: dims.emojiLg),
                       ),
                     ),
                     Center(
@@ -70,28 +73,30 @@ class _StatusHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dims = context.dims;
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [AppColors.sky, AppColors.skyDark],
         ),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(26)),
-        boxShadow: [BoxShadow(color: Color(0x332B3A4A), blurRadius: 10)],
+        borderRadius:
+            BorderRadius.vertical(bottom: Radius.circular(dims.radiusXl)),
+        boxShadow: const [BoxShadow(color: Color(0x332B3A4A), blurRadius: 10)],
       ),
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 10,
-        left: 16,
-        right: 16,
-        bottom: 14,
+        top: MediaQuery.of(context).padding.top + dims.gapXs,
+        left: dims.gapMd,
+        right: dims.gapMd,
+        bottom: dims.gapSm,
       ),
       child: Row(
         children: [
           Expanded(
             child: Wrap(
-              spacing: 8,
-              runSpacing: 6,
+              spacing: dims.gapXs,
+              runSpacing: dims.gapXxs,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 StatChip(emoji: '⭐', value: '${progress.totalStars}'),
@@ -108,8 +113,8 @@ class _StatusHeader extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 46,
-                  height: 46,
+                  width: dims.headerAvatar,
+                  height: dims.headerAvatar,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
@@ -118,7 +123,7 @@ class _StatusHeader extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     progress.avatar,
-                    style: const TextStyle(fontSize: 24),
+                    style: TextStyle(fontSize: dims.emojiMd),
                   ),
                 ),
                 Text(
@@ -154,10 +159,11 @@ class _LevelSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dims = context.dims;
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18),
+          padding: EdgeInsets.symmetric(vertical: dims.gapMd),
           child: Row(
             children: [
               const Expanded(child: Divider(color: Color(0xFFF08A3C), thickness: 2.5, endIndent: 14)),
@@ -195,24 +201,25 @@ class _LevelSection extends StatelessWidget {
                         row * 2 < level.categories.length;
                         row++)
                       Padding(
-                        padding: EdgeInsets.only(top: row == 0 ? 0 : 16),
+                        padding:
+                            EdgeInsets.only(top: row == 0 ? 0 : dims.gapMd),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: SizedBox(
-                                height: 210,
+                                height: dims.categoryTileHeight,
                                 child: _CategoryTile(
                                   category: level.categories[row * 2],
                                   unlocked: unlocked,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            SizedBox(width: dims.gapMd),
                             Expanded(
                               child: row * 2 + 1 < level.categories.length
                                   ? SizedBox(
-                                      height: 210,
+                                      height: dims.categoryTileHeight,
                                       child: _CategoryTile(
                                         category:
                                             level.categories[row * 2 + 1],
@@ -228,12 +235,12 @@ class _LevelSection extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 34,
+                width: dims.s(34),
                 child: Column(
                   children: [
                     Container(
-                      width: 30,
-                      height: 30,
+                      width: dims.s(30),
+                      height: dims.s(30),
                       decoration: BoxDecoration(
                         color: unlocked ? Colors.white : AppColors.starGrey,
                         shape: BoxShape.circle,
@@ -284,6 +291,7 @@ class _CategoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final dims = context.dims;
     final progress = context.watch<ProgressService>();
     final stars = progress.starsFor(category.id);
     final content = context.read<AppContent>();
@@ -311,7 +319,7 @@ class _CategoryTile extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(dims.radiusMd),
                 border: Border.all(
                   color: stars == 3 ? AppColors.sun : const Color(0xFFE3E8EE),
                   width: stars == 3 ? 3 : 2,
@@ -324,40 +332,53 @@ class _CategoryTile extends StatelessWidget {
                   ),
                 ],
               ),
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(dims.gapXs),
               child: Column(
                 children: [
                   Expanded(
                     child: Opacity(
                       opacity: unlocked ? 1 : .35,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
+                      // Un vrai cercle (AspectRatio 1) et un emoji dimensionné
+                      // par rapport au cercle : plus de débordement sur les
+                      // petits écrans.
+                      child: Center(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Container(
+                            margin: EdgeInsets.all(dims.gapXxs),
                             decoration: BoxDecoration(
                               color: pastelOf(category.color, .82),
                               shape: BoxShape.circle,
                             ),
-                            margin: const EdgeInsets.all(4),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                FractionallySizedBox(
+                                  widthFactor: .58,
+                                  heightFactor: .58,
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(category.emoji),
+                                  ),
+                                ),
+                                if (!unlocked)
+                                  Icon(Icons.lock_rounded,
+                                      size: dims.s(30),
+                                      color: AppColors.ink),
+                              ],
+                            ),
                           ),
-                          Text(
-                            category.emoji,
-                            style: const TextStyle(fontSize: 44),
-                          ),
-                          if (!unlocked)
-                            const Icon(Icons.lock_rounded,
-                                size: 30, color: AppColors.ink),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: dims.gapXxs),
                   StarRow(stars: unlocked ? stars : 0),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: dims.gapXxs),
           Text(
             category.title.toUpperCase(),
             textAlign: TextAlign.center,

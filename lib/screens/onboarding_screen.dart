@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,7 +8,8 @@ import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 
-/// Création du profil enfant : avatar + prénom.
+/// Premier lancement : l'enfant donne juste son prénom, l'avatar est
+/// tiré au sort (modifiable ensuite dans l'espace parents).
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -16,7 +19,6 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final _nameController = TextEditingController();
-  String? _avatar;
 
   @override
   void dispose() {
@@ -24,11 +26,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
+  void _start() {
+    final name = _nameController.text.trim();
+    if (name.isEmpty) return;
+    final avatars = context.read<AppContent>().config.avatars;
+    final avatar = avatars.isEmpty
+        ? '⭐'
+        : avatars[Random().nextInt(avatars.length)];
+    context.read<ProgressService>().setProfile(name: name, avatar: avatar);
+  }
+
   @override
   Widget build(BuildContext context) {
     final content = context.read<AppContent>();
     final theme = Theme.of(context);
-    final canStart = _avatar != null && _nameController.text.trim().isNotEmpty;
+    final dims = context.dims;
+    final canStart = _nameController.text.trim().isNotEmpty;
 
     return Scaffold(
       body: Container(
@@ -37,24 +50,55 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [AppColors.sky, Color(0xFF7DC9FA), AppColors.sand],
-            stops: [0, .45, .8],
+            stops: [0, .55, 1],
           ),
         ),
         child: SafeArea(
           child: Center(
+            // Le scroll n'est qu'un filet de sécurité (clavier ouvert,
+            // très petit écran) : le contenu tient sans scroller.
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+              padding: EdgeInsets.symmetric(
+                horizontal: dims.gapLg,
+                vertical: dims.gapSm,
+              ),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 460),
+                constraints:
+                    const BoxConstraints(maxWidth: AppDims.maxContentWidth),
                 child: Column(
                   children: [
-                    const SizedBox(height: 12),
-                    Text('☀️', style: TextStyle(fontSize: 64)),
-                    const SizedBox(height: 4),
+                    Pop(
+                      child: Container(
+                        padding: EdgeInsets.all(dims.gapXxs),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.circular(dims.radiusXl),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x33000000),
+                              blurRadius: 14,
+                              offset: Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(dims.radiusLg),
+                          child: Image.asset(
+                            'assets/images/logo.png',
+                            width: dims.logo,
+                            height: dims.logo,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: dims.gapSm),
                     Text(
                       content.config.appName,
                       textAlign: TextAlign.center,
-                      style: theme.textTheme.displaySmall?.copyWith(
+                      style: theme.textTheme.headlineMedium?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w800,
                         shadows: const [
@@ -70,101 +114,59 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    SizedBox(height: dims.gapLg),
                     Container(
-                      padding: const EdgeInsets.all(22),
+                      padding: EdgeInsets.all(dims.gapLg),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(28),
+                        borderRadius: BorderRadius.circular(dims.radiusXl),
                         boxShadow: const [
                           BoxShadow(color: Color(0x22000000), blurRadius: 16),
                         ],
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            'Choisis ton avatar',
+                            'Comment tu t\'appelles ?',
+                            textAlign: TextAlign.center,
                             style: theme.textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.w800),
                           ),
-                          const SizedBox(height: 12),
-                          Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: [
-                              for (final emoji in content.config.avatars)
-                                Bouncy(
-                                  onTap: () =>
-                                      setState(() => _avatar = emoji),
-                                  child: AnimatedContainer(
-                                    duration:
-                                        const Duration(milliseconds: 180),
-                                    width: 58,
-                                    height: 58,
-                                    decoration: BoxDecoration(
-                                      color: _avatar == emoji
-                                          ? AppColors.sun
-                                              .withValues(alpha: .25)
-                                          : AppColors.sand,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: _avatar == emoji
-                                            ? AppColors.sun
-                                            : Colors.black12,
-                                        width: _avatar == emoji ? 3 : 1.5,
-                                      ),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      emoji,
-                                      style: const TextStyle(fontSize: 28),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: 22),
-                          Text(
-                            'Ton prénom',
-                            style: theme.textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.w800),
-                          ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: dims.gapMd),
                           TextField(
                             controller: _nameController,
                             textCapitalization: TextCapitalization.words,
+                            textAlign: TextAlign.center,
                             maxLength: 20,
                             onChanged: (_) => setState(() {}),
+                            onSubmitted: (_) => _start(),
                             style: theme.textTheme.titleLarge,
                             decoration: InputDecoration(
-                              hintText: 'Ex. Amina',
+                              hintText: 'Ton prénom',
+                              hintStyle: theme.textTheme.titleLarge?.copyWith(
+                                color: AppColors.ink.withValues(alpha: .35),
+                              ),
                               counterText: '',
                               filled: true,
                               fillColor: AppColors.sand,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius:
+                                    BorderRadius.circular(dims.textFieldRadius),
                                 borderSide: BorderSide.none,
                               ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 14),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: dims.gapMd,
+                                vertical: dims.gapSm,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 24),
-                          Center(
-                            child: PrimaryButton(
-                              label: "C'EST PARTI !",
-                              icon: Icons.rocket_launch_rounded,
-                              color: AppColors.correct,
-                              onTap: canStart
-                                  ? () => context
-                                      .read<ProgressService>()
-                                      .setProfile(
-                                        name: _nameController.text.trim(),
-                                        avatar: _avatar!,
-                                      )
-                                  : null,
-                            ),
+                          SizedBox(height: dims.gapMd),
+                          PrimaryButton(
+                            label: "C'EST PARTI !",
+                            icon: Icons.rocket_launch_rounded,
+                            color: AppColors.correct,
+                            onTap: canStart ? _start : null,
                           ),
                         ],
                       ),
