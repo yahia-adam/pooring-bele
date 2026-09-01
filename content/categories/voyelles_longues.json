@@ -7,7 +7,7 @@
       "upper": "AA",
       "lower": "aa",
       "image": "images/voyelles_longues/aa.webp",
-      "audio": "audio/voyelles_longues/aa.m4a"
+      "audio": "audio/voyelles_longues/aa.mp3"
     },
     {
       "id": "a2a2",
@@ -15,7 +15,7 @@
       "upper": "A̠A̠",
       "lower": "a̠a̠",
       "image": "images/voyelles_longues/a2a2.webp",
-      "audio": "audio/voyelles_longues/a2a2.m4a"
+      "audio": "audio/voyelles_longues/a2a2.mp3"
     },
     {
       "id": "ee",
@@ -23,7 +23,7 @@
       "upper": "EE",
       "lower": "ee",
       "image": "images/voyelles_longues/ee.webp",
-      "audio": "audio/voyelles_longues/ee.m4a"
+      "audio": "audio/voyelles_longues/ee.mp3"
     },
     {
       "id": "ii",
@@ -31,7 +31,7 @@
       "upper": "II",
       "lower": "ii",
       "image": "images/voyelles_longues/ii.webp",
-      "audio": "audio/voyelles_longues/ii.m4a"
+      "audio": "audio/voyelles_longues/ii.mp3"
     },
     {
       "id": "i2i2",
@@ -39,7 +39,7 @@
       "upper": "ƗƗ",
       "lower": "ɨɨ",
       "image": "images/voyelles_longues/i2i2.webp",
-      "audio": "audio/voyelles_longues/i2i2.m4a"
+      "audio": "audio/voyelles_longues/i2i2.mp3"
     },
     {
       "id": "oo",
@@ -47,7 +47,7 @@
       "upper": "OO",
       "lower": "oo",
       "image": "images/voyelles_longues/oo.webp",
-      "audio": "audio/voyelles_longues/oo.m4a"
+      "audio": "audio/voyelles_longues/oo.mp3"
     },
     {
       "id": "uu",
@@ -55,7 +55,7 @@
       "upper": "UU",
       "lower": "uu",
       "image": "images/voyelles_longues/uu.webp",
-      "audio": "audio/voyelles_longues/uu.m4a"
+      "audio": "audio/voyelles_longues/uu.mp3"
     },
     {
       "id": "u2u2",
@@ -63,7 +63,7 @@
       "upper": "ɄɄ",
       "lower": "ʉʉ",
       "image": "images/voyelles_longues/u2u2.webp",
-      "audio": "audio/voyelles_longues/u2u2.m4a"
+      "audio": "audio/voyelles_longues/u2u2.mp3"
     }
   ]
 }
