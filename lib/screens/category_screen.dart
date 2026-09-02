@@ -12,13 +12,24 @@ import 'lesson_screen.dart';
 
 /// Mode découverte (imagier) d'une catégorie : on explore, on écoute,
 /// puis on lance la leçon avec le gros bouton « Jouer ».
-class CategoryScreen extends StatelessWidget {
+class CategoryScreen extends StatefulWidget {
   final CategoryDef category;
 
   const CategoryScreen({super.key, required this.category});
 
   @override
+  State<CategoryScreen> createState() => _CategoryScreenState();
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
+  /// Mots déjà écoutés : la barre se remplit et la carte tapée prend la
+  /// couleur de la catégorie — deux raisons, pour l'enfant, de tout
+  /// explorer avant de jouer.
+  final Set<String> _explored = {};
+
+  @override
   Widget build(BuildContext context) {
+    final category = widget.category;
     final content = context.read<AppContent>();
     final progress = context.watch<ProgressService>();
     final items = content.itemsOf(category.id);
@@ -93,6 +104,15 @@ class CategoryScreen extends StatelessWidget {
               ],
             ),
           ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+                dims.gapMd, dims.gapMd, dims.gapMd, dims.gapXxs),
+            child: LessonProgressBar(
+              current: _explored.length,
+              total: items.length,
+              color: color,
+            ),
+          ),
           Expanded(
             child: Center(
               child: ConstrainedBox(
@@ -108,8 +128,15 @@ class CategoryScreen extends StatelessWidget {
                     childAspectRatio: .82,
                   ),
                   itemCount: items.length,
-                  itemBuilder: (context, i) =>
-                      _DiscoveryCard(item: items[i], category: category),
+                  itemBuilder: (context, i) => _DiscoveryCard(
+                    item: items[i],
+                    category: category,
+                    explored: _explored.contains(items[i].id),
+                    onTap: () {
+                      context.read<AudioService>().playItem(items[i]);
+                      setState(() => _explored.add(items[i].id));
+                    },
+                  ),
                 ),
               ),
             ),
@@ -133,53 +160,50 @@ class CategoryScreen extends StatelessWidget {
   }
 }
 
+/// Carte d'un mot de l'imagier : bordure sobre tant qu'il n'a pas été
+/// écouté, couleur de la catégorie une fois [explored].
 class _DiscoveryCard extends StatelessWidget {
   final WordItem item;
   final CategoryDef category;
+  final bool explored;
+  final VoidCallback onTap;
 
-  const _DiscoveryCard({required this.item, required this.category});
+  const _DiscoveryCard({
+    required this.item,
+    required this.category,
+    required this.explored,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final content = context.read<AppContent>();
-    final hasAudio = content.hasLocalAudio(item);
+    final dims = context.dims;
+    final hasAudio = context.read<AppContent>().hasLocalAudio(item);
 
-    return Bouncy(
-      onTap: () => context.read<AudioService>().playItem(item),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: category.color.withValues(alpha: .5), width: 2),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x12000000),
-              blurRadius: 6,
-              offset: Offset(0, 2),
+    return TapCard(
+      accent: explored ? category.color : null,
+      filled: explored,
+      glow: explored,
+      onTap: onTap,
+      child: Column(
+        children: [
+          Expanded(child: ItemVisual(item: item, category: category)),
+          SizedBox(height: dims.gapXxs),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              item.label.toUpperCase(),
+              style: AppTheme.furText(fontSize: dims.s(15)),
+              textAlign: TextAlign.center,
             ),
-          ],
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: [
-            Expanded(child: ItemVisual(item: item, category: category)),
-            const SizedBox(height: 4),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                item.label.toUpperCase(),
-                style: AppTheme.furText(fontSize: 15),
-                textAlign: TextAlign.center,
-              ),
+          ),
+          if (hasAudio)
+            Icon(
+              Icons.volume_up_rounded,
+              size: dims.iconSm,
+              color: explored ? darken(category.color) : TapCard.soberBorder,
             ),
-            if (hasAudio)
-              Icon(
-                Icons.volume_up_rounded,
-                size: 16,
-                color: category.color.withValues(alpha: .7),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }

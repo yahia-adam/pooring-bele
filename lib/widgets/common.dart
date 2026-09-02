@@ -440,6 +440,60 @@ class BackBubble extends StatelessWidget {
   }
 }
 
+/// Socle commun des cartes tapables (choix de quiz, cartes d'imagier) :
+/// carte blanche à bordure sobre. Avec un [accent], la bordure prend cette
+/// couleur, et [filled] y ajoute un fond pastel assorti.
+class TapCard extends StatelessWidget {
+  /// Couleur de la bordure ; `null` pour la bordure neutre.
+  final Color? accent;
+  final bool filled;
+  final bool glow;
+  final VoidCallback? onTap;
+  final Widget child;
+
+  /// Bordure au repos : discrète, pour que seule la couleur gagnée ressorte.
+  static const soberBorder = Color(0xFFE3E8EE);
+
+  const TapCard({
+    super.key,
+    this.accent,
+    this.filled = false,
+    this.glow = false,
+    this.onTap,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final dims = context.dims;
+    final accent = this.accent;
+    return Bouncy(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        decoration: BoxDecoration(
+          color:
+              filled && accent != null ? pastelOf(accent, .82) : Colors.white,
+          borderRadius: BorderRadius.circular(dims.radiusMd),
+          border: Border.all(color: accent ?? soberBorder, width: 3),
+          boxShadow: [
+            if (glow && accent != null)
+              BoxShadow(color: accent.withValues(alpha: .35), blurRadius: 14)
+            else
+              const BoxShadow(
+                color: Color(0x14000000),
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              ),
+          ],
+        ),
+        padding: EdgeInsets.all(dims.gapXs),
+        child: child,
+      ),
+    );
+  }
+}
+
 /// État d'une carte de choix dans un quiz (leçon ou test global).
 enum ChoiceState { idle, correct, wrong }
 
@@ -463,34 +517,18 @@ class ChoiceFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dims = context.dims;
-    final borderColor = switch (state) {
-      ChoiceState.correct => AppColors.correct,
-      ChoiceState.wrong => AppColors.wrong,
-      ChoiceState.idle => const Color(0xFFE3E8EE),
-    };
-
-    final card = AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(dims.radiusMd),
-        border: Border.all(color: borderColor, width: 3),
-        boxShadow: [
-          if (state == ChoiceState.correct)
-            const BoxShadow(color: Color(0x5534C759), blurRadius: 14)
-          else
-            const BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            ),
-        ],
-      ),
-      padding: EdgeInsets.all(dims.gapXs),
+    final card = TapCard(
+      accent: switch (state) {
+        ChoiceState.correct => AppColors.correct,
+        ChoiceState.wrong => AppColors.wrong,
+        ChoiceState.idle => null,
+      },
+      glow: state == ChoiceState.correct,
+      onTap: onTap,
       child: child,
     );
 
-    Widget wrapped = switch (state) {
+    return switch (state) {
       // Bonne réponse : la carte rebondit joyeusement et un confetti
       // surgit dans le coin.
       ChoiceState.correct => TweenAnimationBuilder<double>(
@@ -527,8 +565,6 @@ class ChoiceFrame extends StatelessWidget {
         ),
       ChoiceState.idle => card,
     };
-
-    return Bouncy(onTap: onTap, child: wrapped);
   }
 }
 

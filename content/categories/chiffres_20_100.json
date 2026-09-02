@@ -1,7 +1,7 @@
 {
   "category": "chiffres_20_100",
   "items": [
-    { "id": "21",  "chiffre": "21",  "ecrit": "Wa̱yyéŋá a̱w na dɨɨg", "image": "images/chiffres/21.webp",  "audio": "audio/chiffres/21.m4a" },
+    { "id": "20",  "chiffre": "20",  "ecrit": "Wa̱yyéŋá a̱w", "image": "images/chiffres/20.webp",  "audio": "audio/chiffres/20.m4a" },
     { "id": "30",  "chiffre": "30",  "ecrit": "Wa̱yyéŋá ɨɨs", "image": "images/chiffres/30.webp",  "audio": "audio/chiffres/30.m4a" },
     { "id": "31",  "chiffre": "31",  "ecrit": "Wa̱yyéŋá ɨɨs na dɨɨg", "image": "images/chiffres/31.webp",  "audio": "audio/chiffres/31.m4a" },
     { "id": "40",  "chiffre": "40",  "ecrit": "Wa̱yyéŋá oŋŋal", "image": "images/chiffres/40.webp",  "audio": "audio/chiffres/40.m4a" },
