@@ -1,0 +1,17 @@
+{
+  "category": "chiffres_100_plus",
+  "items": [
+    { "id": "100", "chiffre": "100", "ecrit": "Píri", "image": "images/chiffres/100.webp", "audio": "audio/chiffres/100.m4a" },
+    { "id": "200", "chiffre": "200", "ecrit": "Píriŋa a̱w", "image": "images/chiffres/200.webp", "audio": "audio/chiffres/200.m4a" },
+    { "id": "300", "chiffre": "300", "ecrit": "Píriŋa ɨɨs", "image": "images/chiffres/300.webp", "audio": "audio/chiffres/300.m4a" },
+    { "id": "400", "chiffre": "400", "ecrit": "Píriŋa oŋŋal", "image": "images/chiffres/400.webp", "audio": "audio/chiffres/400.m4a" },
+    { "id": "500", "chiffre": "500", "ecrit": "Píriŋa oos", "image": "images/chiffres/500.webp", "audio": "audio/chiffres/500.m4a" },
+    { "id": "600", "chiffre": "600", "ecrit": "Píriŋa osandɨɨg", "image": "images/chiffres/600.webp", "audio": "audio/chiffres/600.m4a" },
+    { "id": "700", "chiffre": "700", "ecrit": "Píriŋa osana̱w", "image": "images/chiffres/700.webp", "audio": "audio/chiffres/700.m4a" },
+    { "id": "800", "chiffre": "800", "ecrit": "Píriŋa osa̱nɨɨs", "image": "images/chiffres/800.webp", "audio": "audio/chiffres/800.m4a" },
+    { "id": "900", "chiffre": "900", "ecrit": "Píriŋa osa̱noŋŋa̱l", "image": "images/chiffres/900.webp", "audio": "audio/chiffres/900.m4a" },
+    { "id": "1000",       "chiffre": "1000",       "ecrit": "Líri", "image": "images/chiffres/1_000.webp",       "audio": "audio/chiffres/1000.m4a" },
+    { "id": "1000000",    "chiffre": "1 000 000",    "ecrit": "Míri", "image": "images/chiffres/1_000_000.webp",    "audio": "audio/chiffres/1000000.m4a" },
+    { "id": "1000000000", "chiffre": "1 000 000 000 000", "ecrit": "Tíri", "image": "images/chiffres/1_000_000_000_000.webp", "audio": "audio/chiffres/1000000000.m4a" }
+  ]
+}

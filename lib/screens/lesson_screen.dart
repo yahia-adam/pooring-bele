@@ -198,12 +198,13 @@ class _LessonScreenState extends State<LessonScreen> {
                 const BackBubble(),
                 Expanded(
                   child: Text(
-                    widget.category.title.toUpperCase(),
+                    widget.category.title,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
-                          letterSpacing: 2,
+                          fontSize: 18,
+                          letterSpacing: .4,
                         ),
                   ),
                 ),
@@ -257,7 +258,7 @@ class _LessonScreenState extends State<LessonScreen> {
                             childAspectRatio: 1.15,
                             children: [
                               for (final choice in _current.choices)
-                                _ChoiceFrame(
+                                ChoiceFrame(
                                   state: _stateOf(choice),
                                   shakeCounter: _shakeCounter,
                                   onTap: () => _onChoiceTap(choice),
@@ -281,96 +282,9 @@ class _LessonScreenState extends State<LessonScreen> {
     );
   }
 
-  _ChoiceState _stateOf(WordItem choice) {
-    if (_correctId == choice.id) return _ChoiceState.correct;
-    if (_wrongIds.contains(choice.id)) return _ChoiceState.wrong;
-    return _ChoiceState.idle;
-  }
-}
-
-enum _ChoiceState { idle, correct, wrong }
-
-class _ChoiceFrame extends StatelessWidget {
-  final _ChoiceState state;
-  final int shakeCounter;
-  final VoidCallback onTap;
-  final Widget child;
-
-  const _ChoiceFrame({
-    required this.state,
-    required this.shakeCounter,
-    required this.onTap,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final dims = context.dims;
-    final borderColor = switch (state) {
-      _ChoiceState.correct => AppColors.correct,
-      _ChoiceState.wrong => AppColors.wrong,
-      _ChoiceState.idle => const Color(0xFFE3E8EE),
-    };
-
-    final card = AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(dims.radiusMd),
-        border: Border.all(color: borderColor, width: 3),
-        boxShadow: [
-          if (state == _ChoiceState.correct)
-            const BoxShadow(color: Color(0x5534C759), blurRadius: 14)
-          else
-            const BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            ),
-        ],
-      ),
-      padding: EdgeInsets.all(dims.gapXs),
-      child: child,
-    );
-
-    Widget wrapped = switch (state) {
-      // Bonne réponse : la carte rebondit joyeusement et un confetti
-      // surgit dans le coin.
-      _ChoiceState.correct => TweenAnimationBuilder<double>(
-          tween: Tween(begin: .85, end: 1),
-          duration: const Duration(milliseconds: 550),
-          curve: Curves.elasticOut,
-          builder: (context, t, child) =>
-              Transform.scale(scale: t, child: child),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              card,
-              Positioned(
-                top: -dims.gapXs,
-                right: -dims.gapXxs,
-                child: Pop(
-                  delay: const Duration(milliseconds: 120),
-                  child: Text('🎉',
-                      style: TextStyle(fontSize: dims.emojiMd * 1.3)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      // Mauvaise réponse : secousse puis la carte s'estompe pour
-      // guider l'enfant vers les choix restants.
-      _ChoiceState.wrong => Shake(
-          trigger: shakeCounter,
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 400),
-            opacity: .55,
-            child: card,
-          ),
-        ),
-      _ChoiceState.idle => card,
-    };
-
-    return Bouncy(onTap: onTap, child: wrapped);
+  ChoiceState _stateOf(WordItem choice) {
+    if (_correctId == choice.id) return ChoiceState.correct;
+    if (_wrongIds.contains(choice.id)) return ChoiceState.wrong;
+    return ChoiceState.idle;
   }
 }

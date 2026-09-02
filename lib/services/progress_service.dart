@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/content.dart';
 import '../services/content_repository.dart';
 
 /// Progression locale de l'enfant (profil, pièces, gemmes, étoiles).
@@ -12,6 +13,7 @@ class ProgressService extends ChangeNotifier {
   static const _kCoins = 'wallet.coins';
   static const _kGems = 'wallet.gems';
   static const _kStars = 'progress.stars';
+  static const _kLevelTests = 'progress.levelTests';
 
   final SharedPreferences _prefs;
 
@@ -21,6 +23,10 @@ class ProgressService extends ChangeNotifier {
   int _gems = 0;
   Map<String, int> _stars = {};
 
+  /// Meilleure médaille obtenue au test global de chaque niveau
+  /// (0 = pas encore réussi, 1 = bronze, 2 = argent, 3 = or).
+  Map<String, int> _levelTests = {};
+
   ProgressService(this._prefs) {
     _name = _prefs.getString(_kName) ?? '';
     _avatar = _prefs.getString(_kAvatar) ?? '⭐';
@@ -29,6 +35,10 @@ class ProgressService extends ChangeNotifier {
     final raw = _prefs.getString(_kStars);
     if (raw != null) {
       _stars = Map<String, int>.from(json.decode(raw) as Map);
+    }
+    final rawTests = _prefs.getString(_kLevelTests);
+    if (rawTests != null) {
+      _levelTests = Map<String, int>.from(json.decode(rawTests) as Map);
     }
   }
 
@@ -42,12 +52,21 @@ class ProgressService extends ChangeNotifier {
 
   int get totalStars => _stars.values.fold(0, (a, b) => a + b);
 
-  /// Le niveau `index` est ouvert quand chaque catégorie du niveau
-  /// précédent a au moins une étoile.
+  /// Médaille du test global d'un niveau : 0 = pas encore réussi,
+  /// 1 = bronze, 2 = argent, 3 = or.
+  int medalFor(String levelId) => _levelTests[levelId] ?? 0;
+
+  /// Le test global d'un niveau se débloque une fois que chaque catégorie
+  /// du niveau a au moins une étoile.
+  bool isTestUnlocked(LevelDef level) =>
+      level.categories.every((c) => starsFor(c.id) > 0);
+
+  /// Le niveau `index` est ouvert quand le test global du niveau précédent
+  /// a été réussi (au moins la médaille de bronze).
   bool isLevelUnlocked(AppContent content, int index) {
     if (index <= 0) return true;
     final previous = content.manifest.levels[index - 1];
-    return previous.categories.every((c) => starsFor(c.id) > 0);
+    return medalFor(previous.id) > 0;
   }
 
   Future<void> setProfile({required String name, required String avatar}) {
@@ -96,15 +115,39 @@ class ProgressService extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Enregistre le résultat du test global d'un niveau. La médaille ne
+  /// baisse jamais ; une coupe d'or rapporte une gemme, comme une catégorie
+  /// à 3 étoiles.
+  Future<void> recordLevelTest({
+    required String levelId,
+    required int medal,
+    required int coinsEarned,
+  }) async {
+    final previous = medalFor(levelId);
+    if (medal > previous) {
+      _levelTests[levelId] = medal;
+      if (medal == 3) {
+        _gems += 1;
+        await _prefs.setInt(_kGems, _gems);
+      }
+      await _prefs.setString(_kLevelTests, json.encode(_levelTests));
+    }
+    _coins += coinsEarned;
+    await _prefs.setInt(_kCoins, _coins);
+    notifyListeners();
+  }
+
   Future<void> resetProgress() async {
     _coins = 0;
     _gems = 0;
     _stars = {};
+    _levelTests = {};
     notifyListeners();
     await Future.wait([
       _prefs.remove(_kCoins),
       _prefs.remove(_kGems),
       _prefs.remove(_kStars),
+      _prefs.remove(_kLevelTests),
     ]);
   }
 }

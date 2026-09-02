@@ -7,6 +7,7 @@ import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 import 'category_screen.dart';
+import 'level_test_screen.dart';
 import 'parents_screen.dart';
 
 /// Carte des niveaux : barre de statut + parcours vertical des catégories.
@@ -170,11 +171,12 @@ class _LevelSection extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    level.title.toUpperCase(),
+                    level.title,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       color: const Color(0xFFF08A3C),
                       fontWeight: FontWeight.w800,
-                      letterSpacing: 3,
+                      fontSize: 19,
+                      letterSpacing: .6,
                     ),
                   ),
                   if (level.subtitle.isNotEmpty)
@@ -277,7 +279,110 @@ class _LevelSection extends StatelessWidget {
             ],
           ),
         ),
+        if (unlocked)
+          Padding(
+            padding: EdgeInsets.only(top: dims.gapMd),
+            child: _LevelTestTile(level: level),
+          ),
       ],
+    );
+  }
+}
+
+/// Carte du test global de fin de niveau : verrouillée tant que toutes les
+/// catégories du niveau n'ont pas au moins une étoile, sinon elle ouvre le
+/// test dont le score décide de la coupe (bronze/argent/or) et débloque le
+/// niveau suivant.
+class _LevelTestTile extends StatelessWidget {
+  final LevelDef level;
+
+  const _LevelTestTile({required this.level});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dims = context.dims;
+    final progress = context.watch<ProgressService>();
+    final testUnlocked = progress.isTestUnlocked(level);
+    final medal = progress.medalFor(level.id);
+    final trophy = switch (medal) {
+      3 => '🥇',
+      2 => '🥈',
+      1 => '🥉',
+      _ => '🏆',
+    };
+    final subtitle = !testUnlocked
+        ? 'Termine toutes les catégories pour le débloquer'
+        : medal > 0
+            ? 'Coupe obtenue · rejoue pour l\'améliorer'
+            : 'Toutes les catégories réunies, à toi de jouer !';
+
+    return Bouncy(
+      onTap: () {
+        if (!testUnlocked) {
+          ScaffoldMessenger.of(context)
+            ..clearSnackBars()
+            ..showSnackBar(const SnackBar(
+              content: Text(
+                  'Gagne des étoiles dans toutes les catégories pour débloquer le test ! 🔒'),
+            ));
+          return;
+        }
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => LevelTestScreen(level: level)),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding:
+            EdgeInsets.symmetric(horizontal: dims.gapMd, vertical: dims.gapSm),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(dims.radiusMd),
+          border: Border.all(
+            color: medal == 3 ? AppColors.sun : const Color(0xFFF08A3C),
+            width: medal == 3 ? 3 : 2,
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x14000000),
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Opacity(
+              opacity: testUnlocked ? 1 : .35,
+              child: Text(trophy, style: TextStyle(fontSize: dims.emojiLg)),
+            ),
+            SizedBox(width: dims.gapSm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Test final',
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
+                  ),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: AppColors.ink.withValues(alpha: .55),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              testUnlocked ? Icons.chevron_right_rounded : Icons.lock_rounded,
+              color: AppColors.ink.withValues(alpha: .55),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -380,13 +485,14 @@ class _CategoryTile extends StatelessWidget {
           ),
           SizedBox(height: dims.gapXxs),
           Text(
-            category.title.toUpperCase(),
+            category.title,
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w800,
-              letterSpacing: .5,
+              fontSize: 13,
+              letterSpacing: .2,
             ),
           ),
           Text(

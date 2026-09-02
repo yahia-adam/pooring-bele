@@ -51,13 +51,14 @@ class CategoryScreen extends StatelessWidget {
                     const BackBubble(),
                     Expanded(
                       child: Text(
-                        category.title.toUpperCase(),
+                        category.title,
                         textAlign: TextAlign.center,
                         style:
                             Theme.of(context).textTheme.titleLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w800,
-                                  letterSpacing: 2,
+                                  fontSize: 18,
+                                  letterSpacing: .4,
                                 ),
                       ),
                     ),

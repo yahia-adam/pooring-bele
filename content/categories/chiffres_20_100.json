@@ -1,0 +1,20 @@
+{
+  "category": "chiffres_20_100",
+  "items": [
+    { "id": "21",  "chiffre": "21",  "ecrit": "Wa̱yyéŋá a̱w na dɨɨg", "image": "images/chiffres/21.webp",  "audio": "audio/chiffres/21.m4a" },
+    { "id": "30",  "chiffre": "30",  "ecrit": "Wa̱yyéŋá ɨɨs", "image": "images/chiffres/30.webp",  "audio": "audio/chiffres/30.m4a" },
+    { "id": "31",  "chiffre": "31",  "ecrit": "Wa̱yyéŋá ɨɨs na dɨɨg", "image": "images/chiffres/31.webp",  "audio": "audio/chiffres/31.m4a" },
+    { "id": "40",  "chiffre": "40",  "ecrit": "Wa̱yyéŋá oŋŋal", "image": "images/chiffres/40.webp",  "audio": "audio/chiffres/40.m4a" },
+    { "id": "41",  "chiffre": "41",  "ecrit": "Wa̱yyéŋá oŋŋal na dɨɨg", "image": "images/chiffres/41.webp",  "audio": "audio/chiffres/41.m4a" },
+    { "id": "50",  "chiffre": "50",  "ecrit": "Wa̱yyéŋá oss", "image": "images/chiffres/50.webp",  "audio": "audio/chiffres/50.m4a" },
+    { "id": "51",  "chiffre": "51",  "ecrit": "Wa̱yyéŋá oss na dɨɨg", "image": "images/chiffres/51.webp",  "audio": "audio/chiffres/51.m4a" },
+    { "id": "60",  "chiffre": "60",  "ecrit": "Wa̱yyéŋá osandɨɨg", "image": "images/chiffres/60.webp",  "audio": "audio/chiffres/60.m4a" },
+    { "id": "70",  "chiffre": "70",  "ecrit": "Wa̱yyéŋá osana̱w", "image": "images/chiffres/70.webp",  "audio": "audio/chiffres/70.m4a" },
+    { "id": "71",  "chiffre": "71",  "ecrit": "Wa̱yyéŋá osana̱w na dɨɨg", "image": "images/chiffres/71.webp",  "audio": "audio/chiffres/71.m4a" },
+    { "id": "80",  "chiffre": "80",  "ecrit": "Wa̱yyéŋá osanɨɨs", "image": "images/chiffres/80.webp",  "audio": "audio/chiffres/80.m4a" },
+    { "id": "81",  "chiffre": "81",  "ecrit": "Wa̱yyéŋá osanɨɨs na dɨɨg", "image": "images/chiffres/81.webp",  "audio": "audio/chiffres/81.m4a" },
+    { "id": "90",  "chiffre": "90",  "ecrit": "Wa̱yyéŋá osanoŋŋaal", "image": "images/chiffres/90.webp",  "audio": "audio/chiffres/90.m4a" },
+    { "id": "91",  "chiffre": "91",  "ecrit": "Wa̱yyéŋá osanoŋŋaal na dɨɨg", "image": "images/chiffres/91.webp",  "audio": "audio/chiffres/91.m4a" },
+    { "id": "100", "chiffre": "100", "ecrit": "Píri", "image": "images/chiffres/100.webp", "audio": "audio/chiffres/100.m4a" }
+  ]
+}

@@ -4,7 +4,7 @@
     {
       "id": "lvl_1",
       "title": "Niveau 1",
-      "subtitle": "seebáŋa",
+      "subtitle": "les lettres",
       "categories": [
         { "id": "lettres",              "title": "Poor’íŋ belé’ŋ seebáŋa",                    "kind": "letters", "color": "#F4A62A", "emoji": "🔤", "pack": "categories/lettres.json" },
         { "id": "voyelles_courtes",     "title": "Seebáŋa arkaŋa bʉttéŋa kwă",           "kind": "letters", "color": "#7CB342", "emoji": "🔤", "pack": "categories/voyelles_courtes.json" },
@@ -16,11 +16,11 @@
     {
       "id": "lvl_2",
       "title": "Niveau 2",
-      "subtitle": "Le temps et la famille",
+      "subtitle": "Les chiffres",
       "categories": [
-        { "id": "chiffres",             "title": "Poor’íŋ belé’ŋ jʉtʉ́ŋmó",                   "kind": "numbers", "color": "#3C6FB3", "emoji": "🔢", "pack": "categories/chiffres.json" },
-        { "id": "jours",   "title": "kóllíŋ'iŋ soga", "kind": "calendar", "color": "#00897B", "emoji": "📅", "pack": "categories/jours.json" },
-        { "id": "mois",    "title": "Ayé'ŋ kôlda",                "kind": "calendar", "color": "#C0392B", "emoji": "🗓️", "pack": "categories/mois.json" }
+        { "id": "chiffres_0_20",   "title": "Poor’íŋ belé’ŋ jʉtʉ́ŋmó (0-20)",   "kind": "numbers", "color": "#3C6FB3", "emoji": "🔢", "pack": "categories/chiffres_0_20.json" },
+        { "id": "chiffres_20_100", "title": "Poor’íŋ belé’ŋ jʉtʉ́ŋmó (20-100)", "kind": "numbers", "color": "#8E44AD", "emoji": "🔢", "pack": "categories/chiffres_20_100.json" },
+        { "id": "chiffres_100_plus", "title": "Poor’íŋ belé’ŋ jʉtʉ́ŋmó (100+)", "kind": "numbers", "color": "#E67E22", "emoji": "🔢", "pack": "categories/chiffres_100_plus.json" }
       ]
     }
   ]

@@ -6,6 +6,15 @@ import '../theme.dart';
 
 /// Rebond au tap, façon jouet : s'écrase vite à l'appui puis revient
 /// avec un ressort élastique au relâchement.
+///
+/// L'animation est pilotée par un [AnimationController] joué en entier dès
+/// que [onTap] se déclenche, plutôt que par les timings bruts de
+/// `onTapDown`/`onTapUp`. Sur un appui très bref (un tapotement d'enfant),
+/// ces deux évènements pouvaient arriver si près l'un de l'autre qu'aucune
+/// frame intermédiaire n'était jamais peinte : l'animation ne se voyait
+/// alors que sur les appuis tenus assez longtemps (~1s). En rejouant la
+/// séquence complète à chaque tap, le rebond est toujours visible, même
+/// pour un tap instantané.
 class Bouncy extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
@@ -16,20 +25,46 @@ class Bouncy extends StatefulWidget {
   State<Bouncy> createState() => _BouncyState();
 }
 
-class _BouncyState extends State<Bouncy> {
-  bool _pressed = false;
+class _BouncyState extends State<Bouncy> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 420),
+  );
+  late final Animation<double> _scale = TweenSequence<double>([
+    TweenSequenceItem(
+      weight: 25,
+      tween: Tween<double>(begin: 1, end: .9)
+          .chain(CurveTween(curve: Curves.easeOut)),
+    ),
+    TweenSequenceItem(
+      weight: 75,
+      tween: Tween<double>(begin: .9, end: 1)
+          .chain(CurveTween(curve: Curves.elasticOut)),
+    ),
+  ]).animate(_controller);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapCancel: () => setState(() => _pressed = false),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTap: widget.onTap,
-      child: AnimatedScale(
-        scale: _pressed ? .9 : 1,
-        duration: Duration(milliseconds: _pressed ? 90 : 450),
-        curve: _pressed ? Curves.easeOut : Curves.elasticOut,
+      behavior: HitTestBehavior.opaque,
+      onTap: widget.onTap == null
+          ? null
+          : () {
+              // Rejoue depuis le début même si un tap précédent est encore
+              // en cours d'animation (appuis rapides et répétés).
+              _controller.forward(from: 0);
+              widget.onTap!();
+            },
+      child: AnimatedBuilder(
+        animation: _scale,
+        builder: (context, child) =>
+            Transform.scale(scale: _scale.value, child: child),
         child: widget.child,
       ),
     );
@@ -400,6 +435,137 @@ class BackBubble extends StatelessWidget {
           color: iconColor ?? Colors.white,
           size: dims.backBubble * .48,
         ),
+      ),
+    );
+  }
+}
+
+/// État d'une carte de choix dans un quiz (leçon ou test global).
+enum ChoiceState { idle, correct, wrong }
+
+/// Carte cliquable d'un choix de quiz : cadre animé selon [state]
+/// (idle / bonne réponse / mauvaise réponse), utilisée aussi bien pour les
+/// leçons par catégorie que pour le test global de fin de niveau.
+class ChoiceFrame extends StatelessWidget {
+  final ChoiceState state;
+  final int shakeCounter;
+  final VoidCallback onTap;
+  final Widget child;
+
+  const ChoiceFrame({
+    super.key,
+    required this.state,
+    required this.shakeCounter,
+    required this.onTap,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final dims = context.dims;
+    final borderColor = switch (state) {
+      ChoiceState.correct => AppColors.correct,
+      ChoiceState.wrong => AppColors.wrong,
+      ChoiceState.idle => const Color(0xFFE3E8EE),
+    };
+
+    final card = AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(dims.radiusMd),
+        border: Border.all(color: borderColor, width: 3),
+        boxShadow: [
+          if (state == ChoiceState.correct)
+            const BoxShadow(color: Color(0x5534C759), blurRadius: 14)
+          else
+            const BoxShadow(
+              color: Color(0x14000000),
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+        ],
+      ),
+      padding: EdgeInsets.all(dims.gapXs),
+      child: child,
+    );
+
+    Widget wrapped = switch (state) {
+      // Bonne réponse : la carte rebondit joyeusement et un confetti
+      // surgit dans le coin.
+      ChoiceState.correct => TweenAnimationBuilder<double>(
+          tween: Tween(begin: .85, end: 1),
+          duration: const Duration(milliseconds: 550),
+          curve: Curves.elasticOut,
+          builder: (context, t, child) =>
+              Transform.scale(scale: t, child: child),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              card,
+              Positioned(
+                top: -dims.gapXs,
+                right: -dims.gapXxs,
+                child: Pop(
+                  delay: const Duration(milliseconds: 120),
+                  child: Text('🎉',
+                      style: TextStyle(fontSize: dims.emojiMd * 1.3)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      // Mauvaise réponse : secousse puis la carte s'estompe pour
+      // guider l'enfant vers les choix restants.
+      ChoiceState.wrong => Shake(
+          trigger: shakeCounter,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 400),
+            opacity: .55,
+            child: card,
+          ),
+        ),
+      ChoiceState.idle => card,
+    };
+
+    return Bouncy(onTap: onTap, child: wrapped);
+  }
+}
+
+/// Pastille de récompense (pièces, gemmes…) affichée en fin de leçon ou
+/// de test global.
+class RewardChip extends StatelessWidget {
+  final String emoji;
+  final String label;
+
+  const RewardChip({super.key, required this.emoji, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    final dims = context.dims;
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: dims.gapMd,
+        vertical: dims.gapXs,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.sun.withValues(alpha: .18),
+        borderRadius: BorderRadius.circular(dims.radiusLg),
+        border: Border.all(color: AppColors.sun, width: 2),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(emoji, style: TextStyle(fontSize: dims.emojiSm + 4)),
+          SizedBox(width: dims.gapXxs),
+          Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
+        ],
       ),
     );
   }

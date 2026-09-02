@@ -70,11 +70,13 @@ class ResultScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      category.title.toUpperCase(),
+                      category.title,
+                      textAlign: TextAlign.center,
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: darken(color),
                         fontWeight: FontWeight.w800,
-                        letterSpacing: 2,
+                        fontSize: 15,
+                        letterSpacing: .4,
                       ),
                     ),
                     SizedBox(height: dims.gapMd),
@@ -136,12 +138,12 @@ class ResultScreen extends StatelessWidget {
                         Pop(
                           delay: const Duration(milliseconds: 600),
                           child:
-                              _RewardChip(emoji: '🪙', label: '+$coinsEarned'),
+                              RewardChip(emoji: '🪙', label: '+$coinsEarned'),
                         ),
                         if (newGem)
                           const Pop(
                             delay: Duration(milliseconds: 800),
-                            child: _RewardChip(emoji: '💎', label: '+1'),
+                            child: RewardChip(emoji: '💎', label: '+1'),
                           ),
                       ],
                     ),
@@ -179,43 +181,6 @@ class ResultScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _RewardChip extends StatelessWidget {
-  final String emoji;
-  final String label;
-
-  const _RewardChip({required this.emoji, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    final dims = context.dims;
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: dims.gapMd,
-        vertical: dims.gapXs,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.sun.withValues(alpha: .18),
-        borderRadius: BorderRadius.circular(dims.radiusLg),
-        border: Border.all(color: AppColors.sun, width: 2),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(emoji, style: TextStyle(fontSize: dims.emojiSm + 4)),
-          SizedBox(width: dims.gapXxs),
-          Text(
-            label,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.w800),
-          ),
-        ],
       ),
     );
   }
