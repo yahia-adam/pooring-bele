@@ -2,6 +2,8 @@
     <!-- Internet : uniquement pour lire l'audio/les images depuis le CDN
          quand ils ne sont pas embarqués. Aucune autre communication réseau. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Photo de profil : prise via l'appareil photo (inscription). -->
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:label="Poor'íŋ Belé"
         android:name="${applicationName}"

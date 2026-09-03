@@ -170,7 +170,11 @@ class ResultScreen extends StatelessWidget {
                             label: 'SUPER !',
                             icon: Icons.check_rounded,
                             color: AppColors.correct,
-                            onTap: () => Navigator.of(context).pop(),
+                            // Retour direct à la liste des catégories : la
+                            // leçon (et la page catégorie qui l'a lancée)
+                            // sont derrière, on ne veut pas s'y arrêter.
+                            onTap: () => Navigator.of(context)
+                                .popUntil((route) => route.isFirst),
                           ),
                         ),
                       ],

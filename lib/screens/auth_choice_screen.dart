@@ -1,55 +1,23 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../services/content_repository.dart';
-import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
-import 'home_screen.dart';
+import 'login_screen.dart';
+import 'onboarding_screen.dart';
+import 'signup_screen.dart';
 
-/// Premier lancement : l'enfant donne juste son prénom, l'avatar est
-/// tiré au sort (modifiable ensuite dans l'espace parents).
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
-
-  @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final _nameController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _start() async {
-    final name = _nameController.text.trim();
-    if (name.isEmpty) return;
-    final avatars = context.read<AppContent>().config.avatars;
-    final avatar = avatars.isEmpty
-        ? '⭐'
-        : avatars[Random().nextInt(avatars.length)];
-    final progress = context.read<ProgressService>();
-    await progress.switchAccount(null);
-    await progress.setProfile(name: name, avatar: avatar);
-    if (!mounted) return;
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
-      (route) => false,
-    );
-  }
+/// Premier écran : créer un compte (classement), se connecter, ou jouer
+/// sans compte (progression locale uniquement, comme avant).
+class AuthChoiceScreen extends StatelessWidget {
+  const AuthChoiceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final content = context.read<AppContent>();
     final theme = Theme.of(context);
     final dims = context.dims;
-    final canStart = _nameController.text.trim().isNotEmpty;
 
     return Scaffold(
       body: Container(
@@ -63,8 +31,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         child: SafeArea(
           child: Center(
-            // Le scroll n'est qu'un filet de sécurité (clavier ouvert,
-            // très petit écran) : le contenu tient sans scroller.
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(
                 horizontal: dims.gapLg,
@@ -80,8 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         padding: EdgeInsets.all(dims.gapXxs),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(dims.radiusXl),
+                          borderRadius: BorderRadius.circular(dims.radiusXl),
                           boxShadow: const [
                             BoxShadow(
                               color: Color(0x33000000),
@@ -91,8 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ],
                         ),
                         child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(dims.radiusLg),
+                          borderRadius: BorderRadius.circular(dims.radiusLg),
                           child: Image.asset(
                             'assets/images/logo.png',
                             width: dims.logo,
@@ -136,45 +100,45 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            'Comment tu t\'appelles ?',
+                            'Prêt à jouer ? 🚀',
                             textAlign: TextAlign.center,
                             style: theme.textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.w800),
                           ),
                           SizedBox(height: dims.gapMd),
-                          TextField(
-                            controller: _nameController,
-                            textCapitalization: TextCapitalization.words,
-                            textAlign: TextAlign.center,
-                            maxLength: 20,
-                            onChanged: (_) => setState(() {}),
-                            onSubmitted: (_) => _start(),
-                            style: theme.textTheme.titleLarge,
-                            decoration: InputDecoration(
-                              hintText: 'Ton prénom',
-                              hintStyle: theme.textTheme.titleLarge?.copyWith(
-                                color: AppColors.ink.withValues(alpha: .35),
-                              ),
-                              counterText: '',
-                              filled: true,
-                              fillColor: AppColors.sand,
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.circular(dims.textFieldRadius),
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: dims.gapMd,
-                                vertical: dims.gapSm,
-                              ),
+                          PrimaryButton(
+                            label: 'CRÉER UN COMPTE',
+                            icon: Icons.rocket_launch_rounded,
+                            color: AppColors.correct,
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => const SignupScreen()),
+                            ),
+                          ),
+                          SizedBox(height: dims.gapSm),
+                          PrimaryButton(
+                            label: 'SE CONNECTER',
+                            icon: Icons.login_rounded,
+                            color: AppColors.sky,
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => const LoginScreen()),
                             ),
                           ),
                           SizedBox(height: dims.gapMd),
-                          PrimaryButton(
-                            label: "C'EST PARTI !",
-                            icon: Icons.rocket_launch_rounded,
-                            color: AppColors.correct,
-                            onTap: canStart ? _start : null,
+                          TextButton(
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => const OnboardingScreen()),
+                            ),
+                            child: Text(
+                              'Jouer sans compte',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: AppColors.ink.withValues(alpha: .55),
+                                fontWeight: FontWeight.w700,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
                         ],
                       ),

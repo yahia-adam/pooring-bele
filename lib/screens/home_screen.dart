@@ -7,8 +7,8 @@ import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 import 'category_screen.dart';
+import 'leaderboard_screen.dart';
 import 'level_test_screen.dart';
-import 'parents_screen.dart';
 
 /// Carte des niveaux : barre de statut + parcours vertical des catégories.
 class HomeScreen extends StatelessWidget {
@@ -108,7 +108,7 @@ class _StatusHeader extends StatelessWidget {
           ),
           Bouncy(
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ParentsScreen()),
+              MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -122,9 +122,9 @@ class _StatusHeader extends StatelessWidget {
                     border: Border.all(color: AppColors.sun, width: 2.5),
                   ),
                   alignment: Alignment.center,
-                  child: Text(
-                    progress.avatar,
-                    style: TextStyle(fontSize: dims.emojiMd),
+                  child: ProfileAvatar(
+                    avatar: progress.avatar,
+                    size: dims.headerAvatar - 4,
                   ),
                 ),
                 Text(

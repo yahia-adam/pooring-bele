@@ -568,6 +568,198 @@ class ChoiceFrame extends StatelessWidget {
   }
 }
 
+/// Habillage commun des écrans de connexion/inscription : même dégradé
+/// ciel/sable et même carte blanche arrondie que l'écran de bienvenue, pour
+/// que ces pages restent dans l'univers ludique de l'app plutôt que de
+/// ressembler à un formulaire administratif.
+class AuthScaffold extends StatelessWidget {
+  final String emoji;
+  final String title;
+  final Widget child;
+
+  const AuthScaffold({
+    super.key,
+    required this.emoji,
+    required this.title,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dims = context.dims;
+
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.sky, Color(0xFF7DC9FA), AppColors.sand],
+            stops: [0, .55, 1],
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              // Le contenu défilable doit être en dessous du bouton retour
+              // dans l'ordre du Stack : sinon sa zone de détection tactile
+              // (transparente mais opaque au toucher, pour le scroll) capte
+              // le tap avant qu'il n'atteigne la bulle retour en dessous.
+              Center(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: dims.gapLg,
+                    vertical: dims.gapXl,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 480),
+                    child: Column(
+                      children: [
+                        Pop(
+                          child:
+                              Text(emoji, style: TextStyle(fontSize: dims.emojiLg)),
+                        ),
+                        SizedBox(height: dims.gapXxs),
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            shadows: const [
+                              Shadow(color: Color(0x552B3A4A), blurRadius: 8),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: dims.gapLg),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(dims.gapLg),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(dims.radiusXl),
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Color(0x22000000), blurRadius: 16),
+                            ],
+                          ),
+                          child: child,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: dims.gapXs,
+                left: dims.gapXs,
+                child: const BackBubble(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Champ de saisie stylé comme sur l'écran de bienvenue (fond sable, très
+/// arrondi), réutilisé sur les écrans de connexion/inscription.
+class PlayfulField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final bool obscureText;
+  final TextCapitalization textCapitalization;
+  final TextInputType? keyboardType;
+  final ValueChanged<String>? onSubmitted;
+
+  const PlayfulField({
+    super.key,
+    required this.controller,
+    required this.label,
+    this.obscureText = false,
+    this.textCapitalization = TextCapitalization.none,
+    this.keyboardType,
+    this.onSubmitted,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final dims = context.dims;
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      textCapitalization: textCapitalization,
+      keyboardType: keyboardType,
+      onSubmitted: onSubmitted,
+      decoration: InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: AppColors.sand,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(dims.textFieldRadius),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: dims.gapMd,
+          vertical: dims.gapSm,
+        ),
+      ),
+    );
+  }
+}
+
+/// Avatar d'un profil : une vraie photo (URL http, comptes), un emoji
+/// (invités), ou — si rien n'est défini — une icône silhouette, partout où
+/// une photo de profil peut apparaître (en-tête, réglages, classement).
+class ProfileAvatar extends StatelessWidget {
+  final String avatar;
+  final double size;
+  final Color background;
+
+  const ProfileAvatar({
+    super.key,
+    required this.avatar,
+    required this.size,
+    this.background = AppColors.sand,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (avatar.startsWith('http')) {
+      return ClipOval(
+        child: Image.network(
+          avatar,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stack) => _fallback(),
+        ),
+      );
+    }
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: background, shape: BoxShape.circle),
+      child: avatar.isEmpty
+          ? Icon(Icons.person_rounded,
+              size: size * .6, color: AppColors.ink.withValues(alpha: .38))
+          : Text(avatar, style: TextStyle(fontSize: size * .55)),
+    );
+  }
+
+  Widget _fallback() => Container(
+        width: size,
+        height: size,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(color: background, shape: BoxShape.circle),
+        child: Icon(Icons.person_rounded,
+            size: size * .6, color: AppColors.ink.withValues(alpha: .38)),
+      );
+}
+
 /// Pastille de récompense (pièces, gemmes…) affichée en fin de leçon ou
 /// de test global.
 class RewardChip extends StatelessWidget {

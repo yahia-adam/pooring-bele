@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../models/content.dart';
 import '../services/audio_service.dart';
+import '../services/auth_service.dart';
 import '../services/content_repository.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
@@ -167,12 +169,16 @@ class _LevelTestScreenState extends State<LevelTestScreen> {
         (medal > 0 ? config.coinsLessonBonus : 0);
 
     final progress = context.read<ProgressService>();
+    final auth = context.read<AuthService>();
     final previousMedal = progress.medalFor(widget.level.id);
     await progress.recordLevelTest(
       levelId: widget.level.id,
       medal: medal,
       coinsEarned: coins,
     );
+    if (!progress.isGuest) {
+      unawaited(auth.syncPoints(progress.leaderboardPoints));
+    }
 
     if (!mounted) return;
     Navigator.of(context).pushReplacement(

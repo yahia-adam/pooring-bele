@@ -7,7 +7,16 @@ import '../models/content.dart';
 import '../services/content_repository.dart';
 
 /// Progression locale de l'enfant (profil, pièces, gemmes, étoiles).
+///
+/// Les clés sont préfixées par un « namespace » : celui de l'invité, ou
+/// l'id du compte connecté. Ça isole complètement la progression de deux
+/// enfants qui utilisent le même appareil avec des comptes différents —
+/// sans ça, se déconnecter puis se reconnecter avec un autre compte
+/// affichait (et synchronisait vers le classement !) la progression du
+/// compte précédent.
 class ProgressService extends ChangeNotifier {
+  static const _guestNamespace = 'guest';
+
   static const _kName = 'profile.name';
   static const _kAvatar = 'profile.avatar';
   static const _kCoins = 'wallet.coins';
@@ -16,6 +25,7 @@ class ProgressService extends ChangeNotifier {
   static const _kLevelTests = 'progress.levelTests';
 
   final SharedPreferences _prefs;
+  String _namespace;
 
   String _name = '';
   String _avatar = '⭐';
@@ -27,19 +37,35 @@ class ProgressService extends ChangeNotifier {
   /// (0 = pas encore réussi, 1 = bronze, 2 = argent, 3 = or).
   Map<String, int> _levelTests = {};
 
-  ProgressService(this._prefs) {
-    _name = _prefs.getString(_kName) ?? '';
-    _avatar = _prefs.getString(_kAvatar) ?? '⭐';
-    _coins = _prefs.getInt(_kCoins) ?? 0;
-    _gems = _prefs.getInt(_kGems) ?? 0;
-    final raw = _prefs.getString(_kStars);
-    if (raw != null) {
-      _stars = Map<String, int>.from(json.decode(raw) as Map);
-    }
-    final rawTests = _prefs.getString(_kLevelTests);
-    if (rawTests != null) {
-      _levelTests = Map<String, int>.from(json.decode(rawTests) as Map);
-    }
+  /// [accountId] : id du compte Supabase déjà connecté au démarrage
+  /// (session restaurée), ou `null` pour démarrer sur la progression
+  /// invité.
+  ProgressService(this._prefs, {String? accountId})
+      : _namespace = accountId ?? _guestNamespace {
+    _load();
+  }
+
+  String _key(String base) => '$_namespace.$base';
+
+  void _load() {
+    _name = _prefs.getString(_key(_kName)) ?? '';
+    _avatar = _prefs.getString(_key(_kAvatar)) ?? '⭐';
+    _coins = _prefs.getInt(_key(_kCoins)) ?? 0;
+    _gems = _prefs.getInt(_key(_kGems)) ?? 0;
+    final raw = _prefs.getString(_key(_kStars));
+    _stars = raw != null ? Map<String, int>.from(json.decode(raw) as Map) : {};
+    final rawTests = _prefs.getString(_key(_kLevelTests));
+    _levelTests = rawTests != null
+        ? Map<String, int>.from(json.decode(rawTests) as Map)
+        : {};
+  }
+
+  /// Bascule la progression locale affichée sur un autre compte (ou sur
+  /// l'invité si [accountId] est `null`), ex. après connexion/déconnexion.
+  Future<void> switchAccount(String? accountId) async {
+    _namespace = accountId ?? _guestNamespace;
+    _load();
+    notifyListeners();
   }
 
   bool get hasProfile => _name.isNotEmpty;
@@ -47,6 +73,16 @@ class ProgressService extends ChangeNotifier {
   String get avatar => _avatar;
   int get coins => _coins;
   int get gems => _gems;
+
+  /// `true` = pas de compte, progression uniquement locale (namespace
+  /// invité).
+  bool get isGuest => _namespace == _guestNamespace;
+
+  /// Score utilisé pour le classement en ligne : les étoiles de leçon
+  /// comptent chacune 1 point, une médaille de test de niveau en vaut 5
+  /// (bronze=1 à or=3), pour valoriser davantage un test réussi.
+  int get leaderboardPoints =>
+      totalStars + _levelTests.values.fold(0, (a, b) => a + b) * 5;
 
   int starsFor(String categoryId) => _stars[categoryId] ?? 0;
 
@@ -74,15 +110,15 @@ class ProgressService extends ChangeNotifier {
     _avatar = avatar;
     notifyListeners();
     return Future.wait([
-      _prefs.setString(_kName, name),
-      _prefs.setString(_kAvatar, avatar),
+      _prefs.setString(_key(_kName), name),
+      _prefs.setString(_key(_kAvatar), avatar),
     ]);
   }
 
   Future<void> addCoins(int amount) {
     _coins += amount;
     notifyListeners();
-    return _prefs.setInt(_kCoins, _coins);
+    return _prefs.setInt(_key(_kCoins), _coins);
   }
 
   /// Retourne `false` si l'enfant n'a pas assez de pièces.
@@ -90,7 +126,7 @@ class ProgressService extends ChangeNotifier {
     if (_coins < amount) return false;
     _coins -= amount;
     notifyListeners();
-    await _prefs.setInt(_kCoins, _coins);
+    await _prefs.setInt(_key(_kCoins), _coins);
     return true;
   }
 
@@ -106,12 +142,12 @@ class ProgressService extends ChangeNotifier {
       _stars[categoryId] = stars;
       if (stars == 3) {
         _gems += 1;
-        await _prefs.setInt(_kGems, _gems);
+        await _prefs.setInt(_key(_kGems), _gems);
       }
-      await _prefs.setString(_kStars, json.encode(_stars));
+      await _prefs.setString(_key(_kStars), json.encode(_stars));
     }
     _coins += coinsEarned;
-    await _prefs.setInt(_kCoins, _coins);
+    await _prefs.setInt(_key(_kCoins), _coins);
     notifyListeners();
   }
 
@@ -128,12 +164,12 @@ class ProgressService extends ChangeNotifier {
       _levelTests[levelId] = medal;
       if (medal == 3) {
         _gems += 1;
-        await _prefs.setInt(_kGems, _gems);
+        await _prefs.setInt(_key(_kGems), _gems);
       }
-      await _prefs.setString(_kLevelTests, json.encode(_levelTests));
+      await _prefs.setString(_key(_kLevelTests), json.encode(_levelTests));
     }
     _coins += coinsEarned;
-    await _prefs.setInt(_kCoins, _coins);
+    await _prefs.setInt(_key(_kCoins), _coins);
     notifyListeners();
   }
 
@@ -144,10 +180,10 @@ class ProgressService extends ChangeNotifier {
     _levelTests = {};
     notifyListeners();
     await Future.wait([
-      _prefs.remove(_kCoins),
-      _prefs.remove(_kGems),
-      _prefs.remove(_kStars),
-      _prefs.remove(_kLevelTests),
+      _prefs.remove(_key(_kCoins)),
+      _prefs.remove(_key(_kGems)),
+      _prefs.remove(_key(_kStars)),
+      _prefs.remove(_key(_kLevelTests)),
     ]);
   }
 }

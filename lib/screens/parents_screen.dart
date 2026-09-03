@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../services/auth_service.dart';
 import '../services/content_repository.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
+import 'auth_choice_screen.dart';
 
 /// Espace parents, protégé par une petite question de calcul.
 class ParentsScreen extends StatefulWidget {
@@ -20,8 +24,10 @@ class _ParentsScreenState extends State<ParentsScreen> {
   late final int _a;
   late final int _b;
   bool _unlocked = false;
+  bool _changingPhoto = false;
   final _answerController = TextEditingController();
   final _nameController = TextEditingController();
+  final _picker = ImagePicker();
 
   @override
   void initState() {
@@ -37,6 +43,68 @@ class _ParentsScreenState extends State<ParentsScreen> {
     _answerController.dispose();
     _nameController.dispose();
     super.dispose();
+  }
+
+  Future<void> _changePhoto() async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera_rounded),
+              title: const Text('Prendre une photo'),
+              onTap: () => Navigator.of(context).pop(ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_rounded),
+              title: const Text('Choisir dans la galerie'),
+              onTap: () => Navigator.of(context).pop(ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (source == null) return;
+    final photo = await _picker.pickImage(
+      source: source,
+      maxWidth: 512,
+      maxHeight: 512,
+      imageQuality: 85,
+    );
+    if (photo == null || !mounted) return;
+
+    setState(() => _changingPhoto = true);
+    try {
+      final progress = context.read<ProgressService>();
+      final profile =
+          await context.read<AuthService>().updateProfile(photo: photo);
+      await progress.setProfile(
+        name: progress.name,
+        avatar: profile.avatarUrl ?? progress.avatar,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(const SnackBar(content: Text('Photo non envoyée.')));
+    } finally {
+      if (mounted) setState(() => _changingPhoto = false);
+    }
+  }
+
+  Future<void> _signOut() async {
+    final progress = context.read<ProgressService>();
+    await context.read<AuthService>().signOut();
+    await progress.switchAccount(null);
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const AuthChoiceScreen()),
+      (route) => false,
+    );
   }
 
   void _checkAnswer() {
@@ -126,6 +194,24 @@ class _ParentsScreenState extends State<ParentsScreen> {
     );
   }
 
+  Future<void> _saveName(ProgressService progress) async {
+    final name = _nameController.text.trim();
+    if (name.isEmpty) return;
+    final auth = context.read<AuthService>();
+    await progress.setProfile(name: name, avatar: progress.avatar);
+    if (!progress.isGuest) {
+      try {
+        await auth.updateProfile(firstName: name);
+      } catch (_) {
+        // Hors ligne ou erreur réseau : le prénom reste à jour localement.
+      }
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(const SnackBar(content: Text('Profil mis à jour ✔')));
+  }
+
   Widget _buildSettings() {
     final theme = Theme.of(context);
     final content = context.read<AppContent>();
@@ -148,54 +234,64 @@ class _ParentsScreenState extends State<ParentsScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final emoji in content.config.avatars)
-                    Bouncy(
-                      onTap: () => progress.setProfile(
-                        name: _nameController.text.trim().isEmpty
-                            ? progress.name
-                            : _nameController.text.trim(),
-                        avatar: emoji,
-                      ),
-                      child: Container(
-                        width: 46,
-                        height: 46,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: progress.avatar == emoji
-                              ? AppColors.sun.withValues(alpha: .3)
-                              : AppColors.sand,
-                          border: Border.all(
-                            color: progress.avatar == emoji
-                                ? AppColors.sun
-                                : Colors.black12,
-                            width: 2,
-                          ),
+              if (progress.isGuest)
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final emoji in content.config.avatars)
+                      Bouncy(
+                        onTap: () => progress.setProfile(
+                          name: _nameController.text.trim().isEmpty
+                              ? progress.name
+                              : _nameController.text.trim(),
+                          avatar: emoji,
                         ),
-                        alignment: Alignment.center,
-                        child:
-                            Text(emoji, style: const TextStyle(fontSize: 22)),
+                        child: Container(
+                          width: 46,
+                          height: 46,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: progress.avatar == emoji
+                                ? AppColors.sun.withValues(alpha: .3)
+                                : AppColors.sand,
+                            border: Border.all(
+                              color: progress.avatar == emoji
+                                  ? AppColors.sun
+                                  : Colors.black12,
+                              width: 2,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(emoji,
+                              style: const TextStyle(fontSize: 22)),
+                        ),
                       ),
+                  ],
+                )
+              else
+                Row(
+                  children: [
+                    ProfileAvatar(avatar: progress.avatar, size: 56),
+                    const SizedBox(width: 12),
+                    TextButton.icon(
+                      onPressed: _changingPhoto ? null : _changePhoto,
+                      icon: _changingPhoto
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.photo_camera_rounded),
+                      label: const Text('Changer la photo'),
                     ),
-                ],
-              ),
+                  ],
+                ),
               const SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton.icon(
-                  onPressed: () {
-                    final name = _nameController.text.trim();
-                    if (name.isNotEmpty) {
-                      progress.setProfile(name: name, avatar: progress.avatar);
-                      ScaffoldMessenger.of(context)
-                        ..clearSnackBars()
-                        ..showSnackBar(const SnackBar(
-                            content: Text('Profil mis à jour ✔')));
-                    }
-                  },
+                  onPressed: () => _saveName(progress),
                   icon: const Icon(Icons.save_rounded),
                   label: const Text('Enregistrer le prénom'),
                 ),
@@ -203,6 +299,19 @@ class _ParentsScreenState extends State<ParentsScreen> {
             ],
           ),
         ),
+        if (!progress.isGuest)
+          _SectionCard(
+            title: 'Compte',
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                style: TextButton.styleFrom(foregroundColor: AppColors.wrong),
+                onPressed: _signOut,
+                icon: const Icon(Icons.logout_rounded),
+                label: const Text('Se déconnecter'),
+              ),
+            ),
+          ),
         _SectionCard(
           title: 'Progression',
           child: Column(
@@ -219,6 +328,7 @@ class _ParentsScreenState extends State<ParentsScreen> {
                   style:
                       TextButton.styleFrom(foregroundColor: AppColors.wrong),
                   onPressed: () async {
+                    final auth = context.read<AuthService>();
                     final confirmed = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -240,6 +350,9 @@ class _ParentsScreenState extends State<ParentsScreen> {
                     );
                     if (confirmed == true) {
                       await progress.resetProgress();
+                      if (!progress.isGuest) {
+                        unawaited(auth.syncPoints(progress.leaderboardPoints));
+                      }
                     }
                   },
                   icon: const Icon(Icons.restart_alt_rounded),
@@ -264,8 +377,11 @@ class _ParentsScreenState extends State<ParentsScreen> {
                 'Tout le vocabulaire est défini dans les fichiers JSON du '
                 'dossier « content » de l\'application : mots, traductions, '
                 'images et audio peuvent être complétés sans toucher au code. '
-                'Aucune donnée n\'est collectée : la progression reste sur '
-                'cet appareil.',
+                '${progress.isGuest ? "Aucune donnée n'est collectée : la "
+                        "progression reste sur cet appareil." : "Le prénom, "
+                        "la photo et le score sont envoyés au classement en "
+                        "ligne ; le reste de la progression reste sur cet "
+                        "appareil."}',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: AppColors.ink.withValues(alpha: .6),
                 ),
