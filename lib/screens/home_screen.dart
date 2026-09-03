@@ -7,8 +7,9 @@ import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 import 'category_screen.dart';
-import 'leaderboard_screen.dart';
+import 'leaderboard_popup.dart';
 import 'level_test_screen.dart';
+import 'parents_screen.dart';
 
 /// Carte des niveaux : barre de statut + parcours vertical des catégories.
 class HomeScreen extends StatelessWidget {
@@ -106,9 +107,29 @@ class _StatusHeader extends StatelessWidget {
               ],
             ),
           ),
+          // Coupe : le classement s'ouvre en pop-up par-dessus la carte
+          // des niveaux, sans quitter le jeu.
+          Bouncy(
+            onTap: () => showLeaderboardPopup(context),
+            child: Container(
+              width: dims.headerAvatar,
+              height: dims.headerAvatar,
+              margin: EdgeInsets.only(right: dims.gapXs),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: .22),
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.sun, width: 2.5),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                '🏆',
+                style: TextStyle(fontSize: dims.headerAvatar * .5),
+              ),
+            ),
+          ),
           Bouncy(
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
+              MaterialPageRoute(builder: (_) => const ParentsScreen()),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

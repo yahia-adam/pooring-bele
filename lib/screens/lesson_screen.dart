@@ -144,11 +144,13 @@ class _LessonScreenState extends State<LessonScreen> {
     final progress = context.read<ProgressService>();
     final auth = context.read<AuthService>();
     final previousStars = progress.starsFor(widget.category.id);
+    final pointsBefore = progress.leaderboardPoints;
     await progress.recordLesson(
       categoryId: widget.category.id,
       stars: stars,
       coinsEarned: coins,
     );
+    final pointsEarned = progress.leaderboardPoints - pointsBefore;
     if (!progress.isGuest) {
       unawaited(auth.syncPoints(progress.leaderboardPoints));
     }
@@ -162,6 +164,7 @@ class _LessonScreenState extends State<LessonScreen> {
           correct: _firstTryCorrect,
           total: total,
           coinsEarned: coins,
+          pointsEarned: pointsEarned,
           newGem: stars == 3 && previousStars < 3,
         ),
       ),

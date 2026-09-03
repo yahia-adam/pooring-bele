@@ -5,13 +5,18 @@ import '../models/content.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
+import 'leaderboard_popup.dart';
 import 'level_test_screen.dart';
 
 const _testAccent = Color(0xFFF08A3C);
 
 /// Fin de test global : la coupe gagnée (ou pas encore), le score, les
 /// pièces, et la possibilité de retenter le test.
-class LevelTestResultScreen extends StatelessWidget {
+///
+/// Pour un compte, le classement s'ouvre ensuite tout seul en pop-up : les
+/// pièces récoltées s'accumulent dans le compteur, puis l'enfant est
+/// propulsé jusqu'à son nouveau rang.
+class LevelTestResultScreen extends StatefulWidget {
   final LevelDef level;
 
   /// 0 = pas de coupe, 1 = bronze, 2 = argent, 3 = or.
@@ -19,6 +24,10 @@ class LevelTestResultScreen extends StatelessWidget {
   final int correct;
   final int total;
   final int coinsEarned;
+
+  /// Points de classement gagnés au test : ils alimentent l'animation de
+  /// montée dans le pop-up du classement.
+  final int pointsEarned;
   final bool newGem;
 
   const LevelTestResultScreen({
@@ -28,10 +37,33 @@ class LevelTestResultScreen extends StatelessWidget {
     required this.correct,
     required this.total,
     required this.coinsEarned,
+    required this.pointsEarned,
     required this.newGem,
   });
 
-  String get _trophy => switch (medal) {
+  @override
+  State<LevelTestResultScreen> createState() => _LevelTestResultScreenState();
+}
+
+class _LevelTestResultScreenState extends State<LevelTestResultScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Le temps que la coupe rebondisse et que les pièces s'affichent, puis
+    // le classement prend le relais — comme à la fin d'un niveau de jeu.
+    if (!context.read<ProgressService>().isGuest) {
+      Future.delayed(const Duration(milliseconds: 1300), () {
+        if (!mounted) return;
+        showLeaderboardPopup(
+          context,
+          coinsEarned: widget.coinsEarned,
+          pointsEarned: widget.pointsEarned,
+        );
+      });
+    }
+  }
+
+  String get _trophy => switch (widget.medal) {
         3 => '🥇',
         2 => '🥈',
         1 => '🥉',
@@ -39,7 +71,7 @@ class LevelTestResultScreen extends StatelessWidget {
       };
 
   String _message(String name) {
-    switch (medal) {
+    switch (widget.medal) {
       case 3:
         return 'Coupe en or, $name ! Incroyable ! 🎉';
       case 2:
@@ -55,7 +87,7 @@ class LevelTestResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dims = context.dims;
-    final progress = context.read<ProgressService>();
+    final progress = context.watch<ProgressService>();
 
     return Scaffold(
       backgroundColor: pastelOf(_testAccent),
@@ -81,7 +113,7 @@ class LevelTestResultScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '${level.title} · TEST FINAL',
+                      '${widget.level.title} · TEST FINAL',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: darken(_testAccent),
@@ -93,7 +125,8 @@ class LevelTestResultScreen extends StatelessWidget {
                     SizedBox(height: dims.gapMd),
                     Pop(
                       duration: const Duration(milliseconds: 650),
-                      child: Text(_trophy, style: TextStyle(fontSize: dims.starXl * 1.6)),
+                      child: Text(_trophy,
+                          style: TextStyle(fontSize: dims.starXl * 1.6)),
                     ),
                     SizedBox(height: dims.gapXs),
                     Text(
@@ -104,7 +137,7 @@ class LevelTestResultScreen extends StatelessWidget {
                     ),
                     SizedBox(height: dims.gapXxs),
                     Text(
-                      '$correct bonnes réponses sur $total',
+                      '${widget.correct} bonnes réponses sur ${widget.total}',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.titleSmall?.copyWith(
                         color: AppColors.ink.withValues(alpha: .55),
@@ -117,15 +150,26 @@ class LevelTestResultScreen extends StatelessWidget {
                       children: [
                         Pop(
                           delay: const Duration(milliseconds: 600),
-                          child: RewardChip(emoji: '🪙', label: '+$coinsEarned'),
+                          child: RewardChip(
+                              emoji: '🪙', label: '+${widget.coinsEarned}'),
                         ),
-                        if (newGem)
+                        if (widget.newGem)
                           const Pop(
                             delay: Duration(milliseconds: 800),
                             child: RewardChip(emoji: '💎', label: '+1'),
                           ),
                       ],
                     ),
+                    if (!progress.isGuest) ...[
+                      SizedBox(height: dims.gapMd),
+                      Pop(
+                        delay: const Duration(milliseconds: 900),
+                        child: LeaderboardButton(
+                          coinsEarned: widget.coinsEarned,
+                          pointsEarned: widget.pointsEarned,
+                        ),
+                      ),
+                    ],
                     SizedBox(height: dims.gapLg),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -137,7 +181,8 @@ class LevelTestResultScreen extends StatelessWidget {
                             color: const Color(0xFF90A4AE),
                             onTap: () => Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (_) => LevelTestScreen(level: level),
+                                builder: (_) =>
+                                    LevelTestScreen(level: widget.level),
                               ),
                             ),
                           ),

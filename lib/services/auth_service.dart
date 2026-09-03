@@ -18,6 +18,14 @@ class RemoteProfile {
     required this.points,
   });
 
+  RemoteProfile copyWith({int? points}) => RemoteProfile(
+        id: id,
+        firstName: firstName,
+        lastName: lastName,
+        avatarUrl: avatarUrl,
+        points: points ?? this.points,
+      );
+
   factory RemoteProfile.fromRow(Map<String, dynamic> row) => RemoteProfile(
         id: row['id'] as String,
         firstName: row['first_name'] as String,

@@ -171,11 +171,13 @@ class _LevelTestScreenState extends State<LevelTestScreen> {
     final progress = context.read<ProgressService>();
     final auth = context.read<AuthService>();
     final previousMedal = progress.medalFor(widget.level.id);
+    final pointsBefore = progress.leaderboardPoints;
     await progress.recordLevelTest(
       levelId: widget.level.id,
       medal: medal,
       coinsEarned: coins,
     );
+    final pointsEarned = progress.leaderboardPoints - pointsBefore;
     if (!progress.isGuest) {
       unawaited(auth.syncPoints(progress.leaderboardPoints));
     }
@@ -189,6 +191,7 @@ class _LevelTestScreenState extends State<LevelTestScreen> {
           correct: _firstTryCorrect,
           total: total,
           coinsEarned: coins,
+          pointsEarned: pointsEarned,
           newGem: medal == 3 && previousMedal < 3,
         ),
       ),

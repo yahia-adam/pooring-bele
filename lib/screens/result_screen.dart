@@ -5,6 +5,7 @@ import '../models/content.dart';
 import '../services/progress_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
+import 'leaderboard_popup.dart';
 import 'lesson_screen.dart';
 
 /// Fin de leçon : étoiles gagnées, pièces, rejouer ou continuer.
@@ -14,6 +15,10 @@ class ResultScreen extends StatelessWidget {
   final int correct;
   final int total;
   final int coinsEarned;
+
+  /// Points de classement gagnés dans cette leçon : ils alimentent
+  /// l'animation de montée dans le pop-up du classement.
+  final int pointsEarned;
   final bool newGem;
 
   const ResultScreen({
@@ -23,6 +28,7 @@ class ResultScreen extends StatelessWidget {
     required this.correct,
     required this.total,
     required this.coinsEarned,
+    required this.pointsEarned,
     required this.newGem,
   });
 
@@ -147,6 +153,16 @@ class ResultScreen extends StatelessWidget {
                           ),
                       ],
                     ),
+                    if (!progress.isGuest) ...[
+                      SizedBox(height: dims.gapMd),
+                      Pop(
+                        delay: const Duration(milliseconds: 900),
+                        child: LeaderboardButton(
+                          coinsEarned: coinsEarned,
+                          pointsEarned: pointsEarned,
+                        ),
+                      ),
+                    ],
                     SizedBox(height: dims.gapLg),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
